@@ -1,0 +1,2 @@
+2021-02-01 11:21:08 - ERROR for video 4VMBuAPzhKY:
+No such file or directory: 'C:\\Users\\vegex\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english_test'
