@@ -384,14 +384,14 @@ class GenericThumbnailProcessor(object):
     def getColorResults(self, workDir, average_cut):
         workDir=workDir+'/'
         with open(workDir+'metadata.json') as f:
-            metadata = json.load(f)
+             metadata = json.load(f)
         if len(metadata) == 0:
              images = glob.glob(workDir+'*')
-        for filename in images:
-            if ('localMaxFrame' in filename) or filename.endswith('.json'):
-                os.unlink(filename)
-            print('No relevant frames found. Try another method or change parameters.')
-            return 
+             for filename in images:
+                 if ('localMaxFrame' in filename) or filename.endswith('.json'):
+                     os.unlink(filename)
+                     print('No relevant frames found. Try another method or change parameters.')
+                     return 
         lastScene = metadata[len(metadata)-1]
         to = int(lastScene['scene'])
         scenes = []
