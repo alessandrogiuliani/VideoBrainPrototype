@@ -50,7 +50,7 @@ class DOD(object):
         self.n_max_frames = kwargs.get('n_max_frames', 5)
         self.log = kwargs.get('log', False)
         self.corr_threshold = kwargs.get('corr_threshold', 0.9)
-        self.face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/haarcascade_frontalface_default.xml')
+        self.face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
 
 
 

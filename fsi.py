@@ -295,7 +295,7 @@ class FSI(object):
 
     def predictFaces(self, image):
         # Load the cascade
-        face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/haarcascade_frontalface_default.xml')
+        face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
         # Convert into grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # Detect faces

@@ -44,7 +44,7 @@ class GenericThumbnailProcessor(object):
         self.corr_threshold = kwargs.get('corr_threshold', 0.5)
         self.process_color = kwargs.get('process_color', True)
         self.process_faces = kwargs.get('process_faces', True)
-        self.face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/haarcascade_frontalface_default.xml')
+        self.face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
 
 
 
