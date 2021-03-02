@@ -130,7 +130,7 @@ class DOD(object):
         dist = self.compareHist(img, compair, isFile = False) if compair is not None else 0
         if dist <= self.corr_threshold:
             if self.domain == 'music':
-                 prediction = self.predictFaces(img)
+                prediction = self.predictFaces(img)
             else:
                 image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
                 prediction = yoloInstance.detect_img(image, self.domain)

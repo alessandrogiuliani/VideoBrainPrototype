@@ -276,7 +276,7 @@ class GenericThumbnailProcessor(object):
                             print('File Open Error! Try again!')
                         else:
                             if self.log: print('Try to make a prediction on faces.')
-                            if self.process_faces:
+                            if self.process_faces or self.domain=='music':
                                 predictions = self.predictFaces(file)
                                 metainfo['predictions'] = predictions['predictions']
                             else:                            
@@ -287,6 +287,7 @@ class GenericThumbnailProcessor(object):
                         logger.error(f'video id {video_id} not processed image {file}.', exc_info=True)
             except:
                 logger.error(f'video id {video_id} not processed url {video}.')
+        #print(metadata)
         return metadata
         #this function draw the boxes around the detected objects
 
@@ -539,7 +540,7 @@ class GenericThumbnailProcessor(object):
         # Convert into grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # Detect faces
-        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
+        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)        
         predictions = {
                         "predictions": []
                         }
