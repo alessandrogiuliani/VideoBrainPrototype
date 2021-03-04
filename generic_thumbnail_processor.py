@@ -49,7 +49,7 @@ class GenericThumbnailProcessor(object):
         self.eyes_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
         self.smiles = kwargs.get('smiles', True) 
         self.open_eyes = kwargs.get('open_eyes', True)
-            
+        self.max_length = kwargs.get('max_length', 0)    
 
 
 
@@ -100,17 +100,7 @@ class GenericThumbnailProcessor(object):
     
     def path_leaf(self, path):
         head, tail = ntpath.split(path)
-        return tail or ntpath.basename(head)
-    
-    
-    
-    
-    def createFolder(self, videoid):
-        newpath = os.getcwd()+'/outputs1/' + videoid
-        if not os.path.exists(newpath):
-            os.makedirs(newpath)
-        return newpath
-    
+        return tail or ntpath.basename(head)  
     
     
     
@@ -318,11 +308,13 @@ class GenericThumbnailProcessor(object):
         if not cam.isOpened():
             raise IOError('Can\'t open Yolo2Model')
         frame_num = 0
+        fps = cam.get(cv2.CAP_PROP_FPS)
+        frame_limit = fps * self.max_length
         try:
             while True:
                 ret, frame = cam.read()
                 if not ret:
-                    self.totalFrames = frame_num
+                    self.totalFrames = frame_num 
                     if self.log: print('Can\'t read video data. Potential end of stream')
                     return blur_series,colorfulness_series
                 blur_prediction = self.estimate_blur(frame)[0]#blur score
@@ -330,6 +322,11 @@ class GenericThumbnailProcessor(object):
                 blur_series.append(blur_prediction)
                 colorfulness_series.append(colorfulness_prediction)
                 frame_num += 1
+                if self.max_length > 0:
+                    if frame_num > frame_limit:
+                        cam.release()
+                        self.totalFrames = frame_num 
+                        return blur_series,colorfulness_series
         finally:
             cam.release()
 
@@ -353,33 +350,29 @@ class GenericThumbnailProcessor(object):
         if not cam.isOpened():
             raise IOError('ExtractFrames Can\'t open "Yolo2Model"')
         frame_num = 0
-        fps = 0
-        try:
-            #while True:
-            for i in my_progress_bar.progressbar(range(self.totalFrames + 2), widgets=widgets):
-                ret, frame = cam.read()
-                if not ret:
-                    if self.log: print('ExtractFrames Can\'t read video data. Potential end of stream')
-                    return workdir
-                blur_prediction = 0
-                if (frame_num in frame_series) == True: 
-                    blur_prediction = self.estimate_blur(frame)[0]#blur frames
-                    cv2.imwrite(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg', frame)
-                    print(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg')
-                # Draw additional info
-                frame_info = f'Frame: {frame_num}, FPS: {fps:.2f}, Score: {blur_prediction}'
-                cv2.putText(frame, frame_info, (10, frame.shape[0]-10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-                key = cv2.waitKey(1) & 0xFF
-                # Exit
-                if key == ord('q'):
-                    break
-                # Take screenshot
-                if key == ord('s'):
-                    cv2.imwrite(f'frame_{time.time()}.jpg', frame)
-                frame_num += 1
-        finally:
-            cam.release()
+        fps = cam.get(cv2.CAP_PROP_FPS)
+        frame_limit = fps * self.max_length 
+        for i in my_progress_bar.progressbar(range(self.totalFrames), widgets=widgets):
+            ret, frame = cam.read()
+            blur_prediction = 0
+            if (frame_num in frame_series) == True: 
+                blur_prediction = self.estimate_blur(frame)[0]#blur frames
+                cv2.imwrite(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg', frame)
+                print(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg')
+            # Draw additional info
+            frame_info = f'Frame: {frame_num}, FPS: {fps:.2f}, Score: {blur_prediction}'
+            cv2.putText(frame, frame_info, (10, frame.shape[0]-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            key = cv2.waitKey(1) & 0xFF
+            # Exit
+            if key == ord('q'):
+                break
+            # Take screenshot
+            if key == ord('s'):
+                cv2.imwrite(f'frame_{time.time()}.jpg', frame)
+            frame_num += 1
+        return workdir
+
 
 
 
@@ -549,7 +542,6 @@ class GenericThumbnailProcessor(object):
                         }
         # add the faces
         for (x, y, w, h) in faces:
-
             if self.smiles:
                 roi_gray = gray[y:y + h, x:x + w]
                 sm = self.smile_cascade.detectMultiScale(roi_gray, 1.1, 4)

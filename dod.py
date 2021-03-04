@@ -55,7 +55,7 @@ class DOD(object):
         self.eyes_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
         self.smiles = kwargs.get('smiles', True) 
         self.open_eyes = kwargs.get('open_eyes', True)
-            
+        self.max_length = kwargs.get('max_length', 0)    
             
         
 
@@ -205,7 +205,9 @@ class DOD(object):
         cam = cv2.VideoCapture(self.bestVideo)
         if not cam.isOpened():
             raise IOError('Can\'t open Yolo2Model')
-        frame_num = 1
+        frame_num = 0
+        fps = cam.get(cv2.CAP_PROP_FPS)
+        frame_limit = fps * self.max_length
         ret, target = cam.read()
         while True:
             ret, frame = cam.read()
@@ -224,7 +226,12 @@ class DOD(object):
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
-            
+            if self.max_length > 0:
+                if frame_num > frame_limit:
+                    cam.release()
+                    print('Frames extracted:     ' + str(frame_num))
+                    self.totalFrames = frame_num +1
+                    return series, metadata
 
 
     

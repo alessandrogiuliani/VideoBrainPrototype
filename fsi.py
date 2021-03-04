@@ -28,7 +28,7 @@ import shutil
 from yolo import YOLO
 from PIL import Image
 from six.moves.urllib.parse import urlparse
-
+from my_scenedetect.frame_timecode import FrameTimecode
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -52,7 +52,7 @@ class FSI(object):
         self.eyes_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
         self.smiles = kwargs.get('smiles', True) 
         self.open_eyes = kwargs.get('open_eyes', True)
-            
+        self.max_length = kwargs.get('max_length', 0)     
 
 
 
@@ -143,6 +143,9 @@ class FSI(object):
     def differentsFrames(self, video):
         if video is None: return
         video_manager = VideoManager([video])
+        if self.max_length > 0:
+            video_manager.set_duration(duration = FrameTimecode(timecode=float(self.max_length), 
+                                                                fps = video_manager.get_framerate()))
         scene_manager = SceneManager(StatsManager())
         scene_manager.add_detector(ContentDetector(self.fsi_threshold))
         base_timecode = video_manager.get_base_timecode()
@@ -235,7 +238,6 @@ class FSI(object):
         
     def getImgseries(self, video_url, outputFolder):
         prediction, metadata, framesList = [], [], []
-        start_time = time.time()
         video = video_url
         if self.log: print("video_url "+str(video_url))
         #it returns the id if is the url of a youtube video
@@ -255,7 +257,8 @@ class FSI(object):
         if not cam.isOpened():
             raise IOError('Can\'t open Yolo2Model')
         frame_num = 0
-        fps = 0
+        fps = cam.get(cv2.CAP_PROP_FPS)
+        frame_limit = fps * self.max_length
         try:
             while True:
                 ret, frame = cam.read()
@@ -283,15 +286,16 @@ class FSI(object):
                         meta_info['predictions'] = prediction
                         meta_info['fnumb'] = frame_num
                         metadata.append(meta_info)
-                end_time = time.time()
-                fps = fps * 0.9 + 1/(end_time - start_time) * 0.1
-                start_time = end_time
                 time.sleep(0.000001)           
                 key = cv2.waitKey(1) & 0xFF
                 # Exit
                 if key == ord('q'):
                     break
                 frame_num += 1
+                if self.max_length > 0:
+                    if frame_num > frame_limit:
+                        cam.release()
+                        break
         finally:
             cam.release()
 

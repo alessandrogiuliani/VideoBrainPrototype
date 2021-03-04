@@ -1,3 +1,5 @@
 2021-02-01 11:21:08 - ERROR for video 4VMBuAPzhKY:
 No such file or directory: 'C:\\Users\\vegex\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english_test'2021-03-04 10:51:15 - ERROR for video Dx00egWohP8:
-'bool' object is not callable
+'bool' object is not callable2021-03-04 11:57:53 - ERROR for video Dx00egWohP8:
+local variable 'videos' referenced before assignment2021-03-04 15:55:38 - ERROR for video yj17oBIKBuU:
+local variable 'max_length' referenced before assignment

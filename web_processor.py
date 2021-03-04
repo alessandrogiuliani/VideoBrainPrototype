@@ -108,6 +108,7 @@ def process_video():
             tmethod = request.args.get('method', default=method, type = str)
             smiles = str2bool(request.args.get('smiles', default=smile_detection, type = str))
             open_eyes = str2bool(request.args.get('open_eyes', default=open_eye_detection, type = str))
+            m_length = request.args.get('max_length', default=max_length, type = int)
             thumb_parameters = {'domain': vdomain,
                     'log': LOG,
                     'n_max_frames': nframes,
@@ -115,7 +116,8 @@ def process_video():
                     'corr_threshold': cth,
                     'fsi_threshold': fth,
                     'smiles' : smiles,
-                    'open_eyes': open_eyes}
+                    'open_eyes': open_eyes,
+                    'max_length': m_length}
             if tmethod == 'FSI':
                 thumb_handler = FSI(**thumb_parameters)
             elif tmethod == 'DOD':
