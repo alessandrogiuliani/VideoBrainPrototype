@@ -50,10 +50,14 @@ class DOD(object):
         self.n_max_frames = kwargs.get('n_max_frames', 5)
         self.log = kwargs.get('log', False)
         self.corr_threshold = kwargs.get('corr_threshold', 0.9)
-        self.face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
-
-
-
+        self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        self.smile_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_smile.xml')
+        self.eyes_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
+        self.smiles = kwargs.get('smiles', True) 
+        self.open_eyes = kwargs.get('open_eyes', True)
+            
+            
+        
 
 
     def cleanDir(self, folder):
@@ -338,10 +342,18 @@ class DOD(object):
         predictions = []
         #add the faces
         for (x, y, w, h) in faces:
+            if self.smiles:
+                roi_gray = gray[y:y + h, x:x + w]
+                sm = self.smile_cascade.detectMultiScale(roi_gray, 1.1, 4)
+                if len(sm) == 0: continue
+            if self.open_eyes:
+                roi_gray = gray[y:y + h, x:x + w]
+                eyes = self.eyes_cascade.detectMultiScale(roi_gray, 1.1, 4)
+                if len(eyes) == 0: continue
             prediction = {"area": int(w*h),
-                          "box": [int(x), int(y), int(w), int(h)],
-                          "class": "face",
-                          "score": 0.99}
+                         "box": [int(x), int(y), int(w), int(h)],
+                         "class": "face",
+                         "score": 0.99}
             predictions.append(prediction)
         return predictions
     

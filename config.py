@@ -56,6 +56,9 @@ method = parser['thumbnails']['method']
 corr_threshold = float(parser['thumbnails']['corr_threshold'])
 fsi_threshold = float(parser['thumbnails']['fsi_threshold'])
 process_faces = str2bool(parser['thumbnails']['process_faces'])
+smile_detection = str2bool(parser['thumbnails']['smile_detection'])
+open_eye_detection = str2bool(parser['thumbnails']['open_eye_detection'])
+
 
 #Tag generator parameters
 n_suggested_tags = int(parser['tags']['n_suggested_tags'])

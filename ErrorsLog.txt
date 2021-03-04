@@ -1,2 +1,3 @@
 2021-02-01 11:21:08 - ERROR for video 4VMBuAPzhKY:
-No such file or directory: 'C:\\Users\\vegex\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english_test'
+No such file or directory: 'C:\\Users\\vegex\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english_test'2021-03-04 10:51:15 - ERROR for video Dx00egWohP8:
+'bool' object is not callable

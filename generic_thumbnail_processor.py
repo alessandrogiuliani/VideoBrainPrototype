@@ -44,8 +44,12 @@ class GenericThumbnailProcessor(object):
         self.corr_threshold = kwargs.get('corr_threshold', 0.5)
         self.process_color = kwargs.get('process_color', True)
         self.process_faces = kwargs.get('process_faces', True)
-        self.face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
-
+        self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        self.smile_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_smile.xml')
+        self.eyes_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
+        self.smiles = kwargs.get('smiles', True) 
+        self.open_eyes = kwargs.get('open_eyes', True)
+            
 
 
 
@@ -274,13 +278,12 @@ class GenericThumbnailProcessor(object):
                             if self.log: print('Image.opened: '+file)
                         except:
                             print('File Open Error! Try again!')
-                        else:
-                            if self.log: print('Try to make a prediction on faces.')
-                            if self.process_faces or self.domain=='music':
-                                predictions = self.predictFaces(file)
-                                metainfo['predictions'] = predictions['predictions']
-                            else:                            
-                                metainfo['predictions'] = yoloInstance.detect_img(image, self.domain)
+                        if self.log: print('Try to make a prediction on faces.')
+                        if self.process_faces or self.domain=='music':
+                            predictions = self.predictFaces(file)
+                            metainfo['predictions'] = predictions['predictions']
+                        else:                            
+                            metainfo['predictions'] = yoloInstance.detect_img(image, self.domain)
                         metadata.append(metainfo)
                         count = count + 1
                     except:
@@ -540,23 +543,26 @@ class GenericThumbnailProcessor(object):
         # Convert into grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # Detect faces
-        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)        
+        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
         predictions = {
                         "predictions": []
                         }
         # add the faces
         for (x, y, w, h) in faces:
-            prediction = {
-                            "area": int(w*h),
-                            "box": [
-                                    int(x),
-                                    int(y),
-                                    int(w),
-                                    int(h)
-                                    ],
-                            "class": "face",
-                            "score": 0.99
-                         }
+
+            if self.smiles:
+                roi_gray = gray[y:y + h, x:x + w]
+                sm = self.smile_cascade.detectMultiScale(roi_gray, 1.1, 4)
+                if len(sm) == 0:                   
+                    continue
+            if self.open_eyes:
+                roi_gray = gray[y:y + h, x:x + w]
+                eyes = self.eyes_cascade.detectMultiScale(roi_gray, 1.1, 4)
+                if len(eyes) == 0: continue
+            prediction = {"area": int(w*h),
+                         "box": [int(x), int(y), int(w), int(h)],
+                         "class": "face",
+                         "score": 0.99}
             predictions['predictions'].append(prediction)
         #if self.log: print(json.dumps(predictions))
         return predictions
