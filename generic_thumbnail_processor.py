@@ -38,6 +38,7 @@ class GenericThumbnailProcessor(object):
 
 
     def __init__(self, **kwargs):
+        self.filteredFrames = 50
         self.domain = kwargs.get('domain', None)
         self.n_max_frames = kwargs.get('n_max_frames', 5)
         self.log = kwargs.get('log', False)
@@ -186,7 +187,7 @@ class GenericThumbnailProcessor(object):
                 f_count = np.count_nonzero(array_of_zeros)
                 incr = incr + 1
                 #print ("f_count: "+str(f_count))
-                if f_count >= self.n_max_frames or incr==10:
+                if f_count >= self.filteredFrames or incr==10:
                     break
         except Exception as e: 
             print(e)
@@ -358,7 +359,7 @@ class GenericThumbnailProcessor(object):
             if (frame_num in frame_series) == True: 
                 blur_prediction = self.estimate_blur(frame)[0]#blur frames
                 cv2.imwrite(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg', frame)
-                print(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg')
+                if self.log: print(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg')
             # Draw additional info
             frame_info = f'Frame: {frame_num}, FPS: {fps:.2f}, Score: {blur_prediction}'
             cv2.putText(frame, frame_info, (10, frame.shape[0]-10),
