@@ -131,7 +131,7 @@ class DOD(object):
 
     def predict_img(self, img, compair):
         prediction=[]
-        dist = self.compareHist(img, compair, isFile = False) if compair is not None else 0
+        dist = self.compareHist(img, compair, isFile = False) if compair is not None else 0       
         if dist <= self.corr_threshold:
             if self.domain == 'music':
                 prediction = self.predictFaces(img)
@@ -159,6 +159,8 @@ class DOD(object):
     
     def batchHistCompare(self, videofolder, predictions, corr=0.99):
         metadata = []
+        if corr > 1:
+            return metadata
         try:
             #self.logger.info(videofolder)
             video_id = self.path_leaf(videofolder)
@@ -175,7 +177,8 @@ class DOD(object):
                     isChanged = " no scene change."
                     if (dist < corr): 
                         isChanged = " THIS IS A NEW SCENE."
-                        scene_counter += 1                       
+                        scene_counter += 1 
+                        
                     #if self.log: print(f'Image {count}, {self.path_leaf(file)} compare {dist}. {isChanged}')
                     metainfo = {'file': file,
                                 'frame': fname.split('_')[1],
@@ -189,7 +192,7 @@ class DOD(object):
                     self.logger.error(f'video id {video_id} not processed image {file}.', exc_info=True)
         except Exception as e:
             self.logger.error(f'video id {video_id} not processed.')
-            print(e)
+            #print(e)
         return metadata
 
     
@@ -377,14 +380,16 @@ class DOD(object):
         #get at least 5 scenes by improvement of frame correlation
         incr = 0.1
         # if log: print(metadata)
-        lastScene_index = int(metadata[len(metadata)-1]['scene']) if len(metadata)>0 else 0
-        if len(metadata) < self.n_max_frames:
-            lastScene_index = self.n_max_frames
+        size = int(metadata[len(metadata)-1]['scene']) + 1 if len(metadata)>0 else 0
+        if size < self.n_max_frames:
+            #lastScene_index = self.n_max_frames
             print(f'There are less than {self.n_max_frames} scenes. Increasing correlation threshold')
-        while lastScene_index < self.n_max_frames:
+        while size < self.n_max_frames:
             metadata = self.batchHistCompare(workdir, tmp, corr=0.5+incr)
             incr += 0.1
-            lastScene_index = int(metadata[len(metadata)-1]['scene']) if len(metadata)>0 else 0
+            size = int(metadata[len(metadata)-1]['scene']) + 1 if len(metadata)>0 else 0
+            if incr == 0.6:
+                break
         print(f"-- Selected metadata length: {len(metadata)}")
         with open(f'{workdir}/metadata.json', 'w') as f:
             json.dump(metadata, f, indent=4, separators=(',', ': '), sort_keys=True)

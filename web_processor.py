@@ -15,7 +15,7 @@ Dependencies notes:
 import logging
 import os
 import logging.config
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from fsi import FSI
 from dod import DOD
 from generic_thumbnail_processor import BFP, CFP
@@ -24,6 +24,8 @@ from flask import request
 from config import *
 from werkzeug.exceptions import InternalServerError
 import time
+from urllib.error import HTTPError
+
 
 #*****************************************************************************
 #***********************   Parameters settings    ****************************
@@ -41,8 +43,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
+opener = startOpener()
+opener.open('https://www.youtube.com')
 
-print(opener)
 
 
 
@@ -141,7 +144,7 @@ def process_video():
                                 'n_suggested_tags': ntags,
                                 'granularity': gran}
             tag_handler = TagGenerator(model=model, **tag_parameters)
-
+    
             tags = tag_handler.getTags(videoid)
             tagString = '\n'.join(tags)
             resString += f'\r\rGenerated tags:\r\r{tagString}'
@@ -160,7 +163,7 @@ def process_video():
         ts = time.gmtime()
         ts_readable = time.strftime("%Y-%m-%d %H:%M:%S", ts)
         with open(f'./ErrorsLog.txt', 'a+') as f:
-                f.write(f'{ts_readable} - ERROR for video {videoid}:\n{e}')
+            f.write(f'{ts_readable} - ERROR for video {videoid}:\n{e}')
         return 'ERROR: ' + str(e)
 
 

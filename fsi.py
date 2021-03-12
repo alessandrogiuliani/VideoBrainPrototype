@@ -295,6 +295,7 @@ class FSI(object):
                 if self.max_length > 0:
                     if frame_num > frame_limit:
                         cam.release()
+                        return self.getFinalThumbnails(workdir, metadata)
                         break
         finally:
             cam.release()
@@ -304,11 +305,11 @@ class FSI(object):
 
     def predictFaces(self, image):
         # Load the cascade
-        face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
+        # face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
         # Convert into grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # Detect faces
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
         predictions = []
         # add the faces
         for (x, y, w, h) in faces:

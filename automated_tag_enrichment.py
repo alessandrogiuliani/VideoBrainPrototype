@@ -83,20 +83,6 @@ def get_cosine_similarity(feature_vec_1, feature_vec_2):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #*****************************************************************************
 #***********************    Class MySentence   *******************************
 #*****************************************************************************
@@ -268,10 +254,6 @@ class TagGenerator(object):
         self.n_trends = kwargs.get('n_suggested_tags', 5)
         self.google_trends = {}
         self.catIds = utils.CategoryRead(geo=self.languages[language])
-
-
-
-
 
 
 

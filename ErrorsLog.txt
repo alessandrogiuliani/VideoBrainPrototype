@@ -2,4 +2,10 @@
 No such file or directory: 'C:\\Users\\vegex\\AppData\\Roaming\\nltk_data\\corpora\\stopwords\\english_test'2021-03-04 10:51:15 - ERROR for video Dx00egWohP8:
 'bool' object is not callable2021-03-04 11:57:53 - ERROR for video Dx00egWohP8:
 local variable 'videos' referenced before assignment2021-03-04 15:55:38 - ERROR for video yj17oBIKBuU:
-local variable 'max_length' referenced before assignment
+local variable 'max_length' referenced before assignment2021-03-10 15:19:54 - ERROR for video Dx00egWohP8:
+Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-10 15:24:49 - ERROR for video TYsIFX_5qyk:
+Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-10 15:26:07 - ERROR for video TYsIFX_5qyk:
+Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-10 15:26:23 - ERROR for video TYsIFX_5qyk:
+Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-10 15:59:27 - ERROR for video ZXaSa2vEtF8:
+Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-10 16:02:52 - ERROR for video ZXaSa2vEtF8:
+Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.

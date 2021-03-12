@@ -69,37 +69,44 @@ if load_embedding_model:
     model = getModel(language)
 else:
     model = None
+
+
+
+
+
+
+
+def startOpener()  :  
+    if sys.version_info[0]==2:
+        import six
+        from six.moves.urllib import request
+        import random
+        port = 22225
+        session_id = random.random()
+        super_proxy_url = f'http://{luminati_username}-session-{session_id}:{luminati_password}@zproxy.lum-superproxy.io:{port}'
+        proxy_handler = request.ProxyHandler({
+                'http': super_proxy_url,
+                'https': super_proxy_url,
+                })
+        opener = request.build_opener(proxy_handler)
+        opener.addheaders = \
+            [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')]
     
-if sys.version_info[0]==2:
-    import six
-    from six.moves.urllib import request
-    import random
-    port = 22225
-    session_id = random.random()
-    super_proxy_url = f'http://{luminati_username}-session-{session_id}:{luminati_password}@zproxy.lum-superproxy.io:{port}'
-    proxy_handler = request.ProxyHandler({
-            'http': super_proxy_url,
-            'https': super_proxy_url,
-            })
-    opener = request.build_opener(proxy_handler)
-    opener.addheaders = \
+    
+    if sys.version_info[0]==3:
+        import urllib.request
+        import random
+        port = 22225
+        session_id = random.random()
+        super_proxy_url = f'http://{luminati_username}-session-{session_id}:{luminati_password}@zproxy.lum-superproxy.io:{port}'
+        proxy_handler = urllib.request.ProxyHandler({
+                                                    'http': super_proxy_url,
+                                                    'https': super_proxy_url,
+                                                    })
+        opener = urllib.request.build_opener(proxy_handler)
+        opener.addheaders = \
         [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')]
+    return opener
 
 
-if sys.version_info[0]==3:
-    import urllib.request
-    import random
-    port = 22225
-    session_id = random.random()
-    super_proxy_url = f'http://{luminati_username}-session-{session_id}:{luminati_password}@zproxy.lum-superproxy.io:{port}'
-    proxy_handler = urllib.request.ProxyHandler({
-                                                'http': super_proxy_url,
-                                                'https': super_proxy_url,
-                                                })
-    opener = urllib.request.build_opener(proxy_handler)
-    opener.addheaders = \
-    [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')]
-    
-a = opener.open(f'https://www.youtube.com/watch?v=D3kwcibGElQ')
 
-pass

@@ -50,7 +50,8 @@ class GenericThumbnailProcessor(object):
         self.eyes_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
         self.smiles = kwargs.get('smiles', True) 
         self.open_eyes = kwargs.get('open_eyes', True)
-        self.max_length = kwargs.get('max_length', 0)    
+        self.max_length = kwargs.get('max_length', 0)
+        self.opener = kwargs.get('opener', None)
 
 
 
