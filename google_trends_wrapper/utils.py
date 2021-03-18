@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 30 13:42:30 2020
+
+@author: Alessandro Giuliani, Maria Madalina Stanciu
+
+"""
 import google_trends_wrapper as gt
 import pandas as pd
 
@@ -37,36 +44,36 @@ class CategoryRead(object):
 
 
 
-    def set_related_searches(self, video_category, pytrend_category,  limit=None):
+    def set_related_searches(self, video_category, pytrend_category,  limit=None, rising=True):
         results = []
         self.pytrend.build_payload(kw_list=[], cat=pytrend_category,gprop='youtube', geo=self.geo,timeframe='today 1-m')
         related_queries_dict = self.pytrend.related_queries()
         if (video_category in related_queries_dict.keys()):
-            results = self.__get_related_searches(related_queries_dict[video_category])
+            results = self.__get_related_searches(related_queries_dict[video_category], rising=rising)
         else:
-            results = self.__get_related_searches(related_queries_dict)
-        # related_queries_dict_topics =self.pytrend.related_topics()
-        # df = related_queries_dict_topics['top']
-        # for item in self.__get_related_topics_trends(df,pytrend_category):
-        #     if item not in results:
-        #         results.append(item)
+            results = self.__get_related_searches(related_queries_dict, rising=rising)
+        related_queries_dict_topics =self.pytrend.related_topics()
+        df = related_queries_dict_topics['top']
+        for item in self.__get_related_topics_trends(df,pytrend_category):
+            if item not in results:
+                results.append(item)
         return results[:limit]
 
 
 
 
-    def __get_related_searches(self, related_queries_dict):
+    def __get_related_searches(self, related_queries_dict, rising = False):
         result = []
         if (related_queries_dict['top'] is not None):
-
             top5 = related_queries_dict['top']['query'].values
             for item in top5:
                 if item not in result:
                     result.append(item)
-        # if (related_queries_dict['rising'] is not None):
-        #     top5 = related_queries_dict['rising'].head(top_of)['query'].values
-        #     for item in top5:
-        #       result.append(item)
+        if rising:
+            if (related_queries_dict['rising'] is not None):
+                top5 = related_queries_dict['rising']['query'].values
+                for item in top5:
+                  result.append(item)
         return result
 
 
@@ -74,10 +81,10 @@ class CategoryRead(object):
 
     def __get_related_topics_trends(self, df:pd.DataFrame,category):
         result = []
-        for item in df.loc[df['hasData'] == True]['topic_title'].values:
+        for item in df.loc[df['hasData'] == True]['topic_title'].values[0:3]:
             result.append(item)
-        for topic in df.loc[df['hasData']==True]['topic_mid'].values:
-            self.pytrend.build_payload(kw_list=[], cat=category,gprop='youtube', geo=self.geo,timeframe='today 1-m',url=topic)
+        for topic in df.loc[df['hasData']==True]['topic_mid'].values[0:3]:
+            self.pytrend.build_payload(kw_list=[], gprop='youtube', geo=self.geo,timeframe='today 1-m', url=topic)
             related_queries_dict = self.pytrend.related_queries()
             related_topics_results=self.__get_related_searches(related_queries_dict[topic])
             for item in related_topics_results:

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 30 13:42:30 2020
+
+@author: Alessandro Giuliani, Maria Madalina Stanciu
+
+"""
 import pandas as pd
 import numpy as np
 # from tagger import Tagger

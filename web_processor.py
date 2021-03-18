@@ -1,16 +1,6 @@
 """
+@author: Alessandro Giuliani
 
-Dependencies notes:
-    Be sure that the following modules are installed and available in your
-    Python environment:
-
-    - PySceneDetect
-    - OpenCV
-    - Youyube-dl
-    - Tensorflow
-    - Pandas
-    - Flask
-    - flask_cors (in some releases of Flask, it should be missing)
 """
 import logging
 import os
@@ -138,16 +128,24 @@ def process_video():
             lang = request.args.get('lang', default=language, type = str)
             ntags = request.args.get('ntags', default=n_suggested_tags, type = int)
             gran =request.args.get('gran', default=granularity, type = str)
+            title = str2bool(request.args.get('get_title', default=get_title, type = str))
+            description = str2bool(request.args.get('get_description', default=get_description, type = str))
+            original_tags = str2bool(request.args.get('get_original_tags', default=get_original_tags, type = str))
+            rising = str2bool(request.args.get('rising_trends', default=rising_trends, type = str))
             tag_parameters  =  {'domain': vdomain,
                                 'log': LOG,
                                 'language': lang,
                                 'n_suggested_tags': ntags,
-                                'granularity': gran}
+                                'granularity': gran,
+                                'get_title': title,
+                                'get_description': description,
+                                'get_original_tags': original_tags,
+                                'rising_trends': rising}
             tag_handler = TagGenerator(model=model, **tag_parameters)
     
             tags = tag_handler.getTags(videoid)
-            tagString = '\n'.join(tags)
-            resString += f'\r\rGenerated tags:\r\r{tagString}'
+            tagString = '</br>'.join(tags)
+            resString += f'<p>Generated tags:</br>{tagString}'
             local_folder = f'{output_folder_tags}/{videoid}'
             if not os.path.exists(local_folder):
                 os.makedirs(local_folder)

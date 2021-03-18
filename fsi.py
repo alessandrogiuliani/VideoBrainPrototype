@@ -53,7 +53,7 @@ class FSI(object):
         self.smiles = kwargs.get('smiles', True) 
         self.open_eyes = kwargs.get('open_eyes', True)
         self.max_length = kwargs.get('max_length', 0)     
-
+        self.process_faces = kwargs.get('process_faces', False)
 
 
 
@@ -266,7 +266,7 @@ class FSI(object):
                     if self.log: print('Can\'t read video data. Potential end of stream')
                     return self.getFinalThumbnails(workdir, metadata)
                 if frame_num in framesList:
-                    if self.domain == 'music':
+                    if (self.domain == 'music') or (self.process_faces is True):
                         prediction = self.predictFaces(frame)
                     else:
                         prediction = self.predict_img(frame)

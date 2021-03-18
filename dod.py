@@ -2,8 +2,7 @@
 """
 Created on Mon May 11 16:20:55 2020
 
-@credits: Leonardo Piano
-@author: Leonardo Piano, Alessandro Giuliani
+@author: Alessandro Giuliani, Leonardo Piano
 
 
 This module contains all functionalities for the Dynamic Object Detection (DOD) algorithm.
@@ -56,7 +55,7 @@ class DOD(object):
         self.smiles = kwargs.get('smiles', True) 
         self.open_eyes = kwargs.get('open_eyes', True)
         self.max_length = kwargs.get('max_length', 0)    
-            
+        self.process_faces = kwargs.get('process_faces', False)    
         
 
 
@@ -133,7 +132,7 @@ class DOD(object):
         prediction=[]
         dist = self.compareHist(img, compair, isFile = False) if compair is not None else 0       
         if dist <= self.corr_threshold:
-            if self.domain == 'music':
+            if (self.domain == 'music') or (self.process_faces is True):
                 prediction = self.predictFaces(img)
             else:
                 image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))

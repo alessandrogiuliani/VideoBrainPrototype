@@ -2,9 +2,7 @@
 """
 Created on Wed Sep 30 13:42:30 2020
 
-
-@credits: Maria Madalina Stanciu
-@author: Maria Madalina Stanciu, Alessandro Giuliani
+@author: Alessandro Giuliani, Maria Madalina Stanciu
 
 """
 from pandas.io.json import json_normalize
@@ -153,6 +151,9 @@ class YouTubeMetaExtractor(object):
     def __init__(self, ytURL, **kwargs):
         self.videoURLToken = 'https://www.youtube.com'
         self.searchURLToken = 'https://www.youtube.com/results?search_query='
+        self.get_title = kwargs.get('get_title', True)
+        self.get_description = kwargs.get('get_description', True)
+        self.get_original_tags = kwargs.get('get_original_tags', True)
         self.load_settings(ytURL, **kwargs)
         
         
@@ -170,15 +171,19 @@ class YouTubeMetaExtractor(object):
         
         
         
-    def get_metaProperties(self, link, get_title = True):
-        properties = dict()
+    def get_metaProperties(self, link):
+        properties = list()
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
-        tags = soup.find_all("meta",  property="og:video:tag")
-        if get_title:
+        if self.get_original_tags:
+            tags = soup.find_all("meta",  property="og:video:tag")
+            properties += [x['content'] for x in tags]
+        if self.get_title:
             title = soup.find_all("meta",  property="og:title")[0]['content']
-            properties['title'] = title
-        properties['tags'] = [x['content'] for x in tags]
+            properties.append(title)           
+        if self.get_description:
+            description = soup.find_all("meta",  property="og:description")[0]['content']
+            properties.append(description)
         return properties
         
 
@@ -208,7 +213,7 @@ class YouTubeMetaExtractor(object):
 
 
     def get_relatedTags(self, relatedLinks):
-        relatedTags = {k: [self.get_metaProperties(k, get_title = False)] for k in relatedLinks}
+        relatedTags = {k: [self.get_metaProperties(k)] for k in relatedLinks}
         self.properties['relatedtags'] = relatedTags
 
 
@@ -254,7 +259,10 @@ class TagGenerator(object):
         self.n_trends = kwargs.get('n_suggested_tags', 5)
         self.google_trends = {}
         self.catIds = utils.CategoryRead(geo=self.languages[language])
-
+        self.get_title = kwargs.get('get_title', True)
+        self.get_description = kwargs.get('get_description', True)
+        self.get_original_tags = kwargs.get('get_original_tags', True)
+        self.rising = kwargs.get('rising_trends', True)
 
 
 
@@ -277,16 +285,17 @@ class TagGenerator(object):
 
 
     def getCandidateTrends(self):
-        self.candidate_trends = self.catIds.set_related_searches(self.domain, self.Gcategory)
+        self.candidate_trends = self.catIds.set_related_searches(self.domain, self.Gcategory, rising = self.rising)
 
 
 
 
     def getTags(self, videoId):
         videoURL = f'https://www.youtube.com/watch?v={videoId}'
-        yt_handler = YouTubeMetaExtractor(videoURL)
-        originalTags = yt_handler.get_tags(videoURL)
-        parsedOriginalTags = get_tags_sentence(originalTags, word2vec=self.model)
+        yt_handler = YouTubeMetaExtractor(videoURL, get_original_tags=self.get_original_tags, get_title=self.get_title, get_description=self.get_description)
+        #textual_meta = yt_handler.get_tags(videoURL)
+        textual_meta = yt_handler.properties
+        parsedOriginalTags = get_tags_sentence(textual_meta, word2vec=self.model)
         self.getCandidateTrends()
         if len(parsedOriginalTags) == 0:
             return []

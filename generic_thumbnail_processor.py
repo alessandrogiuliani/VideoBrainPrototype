@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 30 13:42:30 2020
+
+@author: Alessandro Giuliani, Eugenio Gaeta, Leonardo Piano
+
+"""
 from yolo import YOLO
 from filters import smooth
 from PIL import Image

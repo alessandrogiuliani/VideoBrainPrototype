@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 30 13:42:30 2020
+
+@author: Alessandro Giuliani
+
+"""
 import os
 from configparser import ConfigParser
 from gensim.models import Word2Vec,KeyedVectors
@@ -15,7 +22,7 @@ def getModel(language):
     elif language == 'english':
         vec = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
         model = KeyedVectors.load_word2vec_format(vec, binary=True)
-        #model= Word2Vec(abc.sents())
+        #model= Word2Vec(abc.sents())   #only for testing
     model.init_sims(replace=True)
     return model
 
@@ -30,7 +37,7 @@ def str2bool(string):
 cfg = f'{os.getcwd()}/config/config.ini'
 
 
-parser = ConfigParser()
+parser = ConfigParser()    
 parser.read(cfg)
 
 
@@ -64,6 +71,10 @@ max_length = int(parser['thumbnails']['max_length'])
 n_suggested_tags = int(parser['tags']['n_suggested_tags'])
 granularity = parser['tags']['granularity']
 output_folder_tags = parser['tags']['output_folder_tags']
+get_title = str2bool(parser['tags']['get_title'])
+get_description = str2bool(parser['tags']['get_description'])
+get_original_tags = str2bool(parser['tags']['get_original_tags'])
+rising_trends = str2bool(parser['tags']['rising_trends'])
 
 if load_embedding_model:
     model = getModel(language)
