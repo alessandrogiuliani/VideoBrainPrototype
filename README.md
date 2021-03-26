@@ -22,8 +22,8 @@ The script installs both the environment and the prototype in a Linux-based OS. 
 ```
 sh install_environment.sh
 ```
-The scripts will install the Python environment (including Anaconda IDE and tools)  
-**NOTE**: the script automatically downloads the other script needed for installing the prototype. No additional manual downloads are required.
+    The scripts will install the Python environment (including Anaconda IDE and tools)  
+    **NOTE**: the script automatically downloads the other script needed for installing the prototype. No additional manual downloads are required.
 3. Close the terminal and relaunch it (this is needed for automatically activating the environment)
 4. Launch the script ```install_prototype```:
 ```
