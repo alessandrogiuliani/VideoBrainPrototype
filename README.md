@@ -1,4 +1,4 @@
-# videoBrain Prototype
+# VideoBrain Prototype
 
 ## Introduction
 
@@ -14,7 +14,7 @@ Latest release changes:
 
 ## Installation
 
-### By script
+#### By script
 The script installs both the environment and the prototype in a Linux-based OS. The system is tested only for Ubuntu20.10; to avoid possible installation issues in different OS, the prototype should be installed manually (see next section). 
 
 1. Download in your desired folder the bash script install_environment.sh from [here] (https://drive.google.com/open?id=1B_QCINqF0wsL8SERLvZeYtuoP_FhnhXd)
