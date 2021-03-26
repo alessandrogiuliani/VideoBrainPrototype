@@ -1,18 +1,30 @@
-# keras-yolo3
-
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
+# videoBrain Prototype
 
 ## Introduction
 
-A Keras implementation of YOLOv3 (Tensorflow backend) inspired by [allanzelener/YAD2K](https://github.com/allanzelener/YAD2K).
+The prototype is entirely implemented in Python language. It embeds several packages, be sure to have installed all dependencies, as reported in the following section. The prototype has been tested in a specific Linux-based environment. See the section “Virtual Machine” for all info. 
+
+Latest release changes: 
+- Tag generation: added rising trends retrieval (in combination with top trends)
+- Tag generation: added the option of considering video title and description. 
+
 
 
 ---
 
-## Quick Start
+## Installation
 
-1. Download YOLOv3 weights from [YOLO website](http://pjreddie.com/darknet/yolo/).
-2. Convert the Darknet YOLO model to a Keras model.
+### By script
+The script installs both the environment and the prototype in a Linux-based OS. The system is tested only for Ubuntu20.10; to avoid possible installation issues in different OS, the prototype should be installed manually (see next section). 
+
+1. Download in your desired folder the bash script install_environment.sh from [here] (https://drive.google.com/open?id=1B_QCINqF0wsL8SERLvZeYtuoP_FhnhXd)
+2. Open the  terminal, and launch the command
+```
+sh install_environment.sh
+```
+The scripts will install the Python environment (including Anaconda IDE and tools)
+NOTE: the script automatically downloads the other script needed for installing the prototype. No additional manual downloads are required.
+
 3. Run YOLO detection.
 
 ```
