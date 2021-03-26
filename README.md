@@ -17,15 +17,29 @@ Latest release changes:
 #### By script
 The script installs both the environment and the prototype in a Linux-based OS. The system is tested only for Ubuntu20.10; to avoid possible installation issues in different OS, the prototype should be installed manually (see next section). 
 
-1. Download in your desired folder the bash script install_environment.sh from [here] (https://drive.google.com/open?id=1B_QCINqF0wsL8SERLvZeYtuoP_FhnhXd)
+1. Download in your desired folder the bash script ```install_environment.sh``` from [here] (https://drive.google.com/open?id=1B_QCINqF0wsL8SERLvZeYtuoP_FhnhXd)
 2. Open the  terminal, and launch the command
 ```
 sh install_environment.sh
 ```
-The scripts will install the Python environment (including Anaconda IDE and tools)
-NOTE: the script automatically downloads the other script needed for installing the prototype. No additional manual downloads are required.
+The scripts will install the Python environment (including Anaconda IDE and tools)  
+**NOTE**: the script automatically downloads the other script needed for installing the prototype. No additional manual downloads are required.
+3. Close the terminal and relaunch it (this is needed for automatically activating the environment)
+4. Launch the script ```install_prototype```:
+```
+		sh install_prototype.sh
+```
+5. The system is now ready, the prototype could be launch with the command 
+```
+		sh RunVideoBrain.sh
+```
+or by the command
+```
+			python [path]/web_processor.py
+			```
+	replacing  [path] with the path folder where the prototype is installed.
 
-3. Run YOLO detection.
+
 
 ```
 wget https://pjreddie.com/media/files/yolov3.weights
