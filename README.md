@@ -77,3 +77,118 @@ The script installs both the environment and the prototype in a Linux-based OS. 
 
 	-   For the *Italian* model, the embeddings could be downloaded from [here](https://www.dropbox.com/s/orqfu6mb9cj9ewr/it.tar.gz?dl=0)  
 	**Important**: unzip the file content in the same folder. The model file is `it.bin`.
+
+## Configuration
+Framework settings and default algorithm parameters are loaded from the file `config.ini`, placed in the folder `config`.
+
+ ### Config.ini
+All configuration parameters are reported below. *Framework  parameters* are the general prototype settings; if there is the need to change them, the new values should be placed here, and the application needs to be restarted. *Main parameters*, *Thumbnail generation*, and *Tag generation* are the default values for each algorithm.
+
+#### Framework parameters
+
+-   ***PORT_NUMBER***: the port of the webserver.
+-   ***STATIC_URL_PATH***: the path of the static files folder (CSS, Js, etc.).
+-   ***LOG***: selects if printing (in the Python console) the various message logs during the execution. Type: boolean
+-   ***load_embedding_model***: select if loading the embedding model. If True, the relative language embedding (see language parameter) is loaded. If you want to change language, you need to reload the python script (which will restart the server). Type: boolean
+-  ***language***: the language of the video or channel.  
+    Note: currently, only English and Italian languages have been implemented.
+-   ***luminati_username***: the user ID of Luminati proxy service. It is needed to avoid the YouTube temporary ban (it happens when too many requests are sent to the YouTube portal).
+    
+-  ***luminati_password***: the password of Luminati proxy service.
+    
+
+#### Main parameters
+
+-   ***domain***: the default domain of the video. Type: string. Although it is recommended to always specify the domain, this default value could be useful when using the app only in a specific domain (*). Currently, the following domains have been implemented:  
+	-  music
+	-  sport
+	-  cars
+	-  food
+	-  animals
+	-  tech
+
+	(*) For more info, check the section “Featured domains” at the end of this document.
+-   ***generate_thumbnails***: selects to compute the thumbnail generation. Type: boolean    
+-   ***generate_tags***: select to compute the tag generation. This is possible ONLY if LOAD_EMBEDDING_MODEL is set to True. Otherwise, no tags would be generated. Type: boolean
+    
+#### Thumbnail Generation
+
+-   ***output_folder_thumbnails***: the main folder where all generated thumbnails will be saved. Note: for each video, thumbnails will be stored in a subfolder named as the video ID. 
+-  ***n_max_frames***: the number of generated thumbnails.  
+-   ***method***: the selected algorithm for thumbnail generation. The values correspond to the following algorithms (we named each algorithm as reported in the WEBIST paper):
+	-   BFP: Blur-based Frame Pruning
+	-   CFP: Colorfulness-based Frame Pruning
+	-   DOD: Dynamic Object Detection
+	-   FSI: Fast Scene Identification
+
+-   ***corr_threshold***: the correlation threshold used for selecting frames in the algorithms BFP, CFP, and DOD (the threshold being the value of the correlation of 2 images).
+-   ***fsi_threshold***: the threshold used for identifying scene changes (the threshold being the value of the difference between the HSV values of 2 images).   
+-   ***process_faces***: select if predicting faces. If the value is False, Yolo will be adopted to recognize objects in images. We suggest setting the value as False and selecting True only for a single run, as faces are helpful mainly for the “music” domain. In contrast, other domains should rely on YOLO analysis.
+-   ***smile_detection***: select if predicting smiles in detected faces. If the value is True, the smile detector of OpenCV will be adopted.
+-  ***open_eye_detection***: determine if predicting open eyes in detected faces. If the value is True, the open-eyes detector of OpenCV will be adopted.
+-   ***max_length***: the maximum video length (in seconds), meaning that only the first max_length seconds of a video will be analyzed. Cutting long videos is helpful to save computational resources. If the value is 0, the entire video will be downloaded and analyzed.
+    
+
+#### Tag generation
+
+-   ***output_folder_tags***: the main folder where all generated tags will be saved. Note: for each video, thumbnails will be stored in a subfolder named as the video ID. 
+-   ***n_suggested_tags*** : the number of output generated tags. Note: output tags are the most related hot trends
+-   ***granularity***: the granularity level in the tags-trend similarity computation. Values:
+
+	-   WL: word level. Each trend is compared to each original tag.    
+	-   SL: sentence level. Each trend is compared to the entire original tags list. 
+	-   CL: cluster level. The original tags are clustered, the trend at hand being compared to each cluster.
+
+-   ***get_original_tags***: if the value is True, the original tags will be taken as input features. 
+-   ***get_title***: if the value is True, the video title will be taken as an additional input feature.
+-   ***get_description***: if the value is True, the video description will be taken as an additional input feature.  
+-   ***rising_trends***: if the value is True, also the “rising” trends of a given topic will be retrieved. If it is False, only “top” trends will be retrieved. 
+***Note***: at least one among title, description, and original tags must be selected to let the prototype work properly.
+
+## Execution
+To start the server, launch the Python script `web_processor.py`
+
+    python web_processor.py
+
+When the server is running, the prototype could analyze a video by means of a URL string in which all parameters may be set. The URL will be formatted in the following way:
+
+	    hosturl:port/api?parameters
+
+After the symbol “?”, each parameter, separated from others with the char “&”, is in the form *parameter=value*. If a parameter is not explicitly specified, the default value will be loaded from the `config.ini` file.
+  
+Example:  
+
+    localhost:8080/api?id=4VMBuAPzhKY&domain=music&nframes=5&gen_tags=true&ntags=5
+
+### URL parameters
+-   **id**: the YouTube video ID. (mandatory)
+-   **domain**: the domain of the video. As reported in the previous section, we implemented the domains *music, sport, cars, food, animals, tech* 
+-   **gen_thumb**: select to compute the thumbnail generation. Values: *True/False*    
+-   **gen_tags**: select to compute the tag generation. Values:  *True/False*    
+-   **nframes**: the number of generated thumbnails.
+-   **method**: the selected algorithm for thumbnail generation. Values: *BFP, CFP, DOD, FSI*
+-   **cth**: the correlation threshold used for selecting frames in the algorithms BFP, CFP, and DOD (the threshold is the value of the correlation of 2 images). 
+-   **fth**: the threshold used for identifying scene changes (the threshold being the value of the difference between the HSV values of 2 images).
+-   **faces**: select if predicting faces. Values:  *True/False*    
+-   **smiles**: select if predicting smiles in detected faces. Values:  *True/False*    
+-   **open_eyes**: select if predicting open eyes in detected faces.  *True/False*     
+-   **max_length**: the maximum video length (in seconds) to be analyzed. Cutting long videos is useful to save computational resources. If the value is 0, the entire video will be downloaded and analyzed.
+-   **ntags**: the number of output generated tags.
+-   **gran**: the granularity level in the tags-trend similarity computation. Values: **WL, SL, CL** 
+-   **get_original_tags**: original tags selection. Values: True/False
+-   **get_title**: video title selection. Values: *True/False*    
+-   **get_description**: video description selection. Values:  *True/False*    
+-   **rising_trends**: “rising” trends selection. Values:  *True/False*    
+
+## Featured Domains
+
+For the sake of completeness, this section reports the main information about the available domains, useful to understand the behavior of the prototype for thumbnail generation.  
+Depending on the selected domain, the system will perform the elaboration in different ways. In details:
+
+-   Domain **music**: the system automatically will recognize frames containing faces (note that the face predictor may detect false positives, being frames without faces). For this purpose, face recognition of OpenCV is adopted.
+-   For the other domains, the prototype will recognize frames containing related objects employing YOLO, an object detection framework embedded in the prototype. YOLO is pre-trained with COCO dataset. Depending on the domain, the framework will recognize the following objects:
+	-   **food**: bottle, wine glass, cup, fork, knife, spoon, bowl, banana, apple, sandwich, orange, broccoli, carrot, hot dog, pizza, donut, cake;
+	-   **cars**: car, motorbike, truck, bus;
+	-   **tech**: tvmonitor, laptop, mouse, remote, keyboard, cell phone, microwave, oven, toaster;
+	-   **animals**: bird, cat, dog, horse, sheep, cow, elephant, bear, zebra, giraffe;
+	-   **sport**: bicycle, car, motorbike, frisbee, skis, snowboard, sports ball, kite, baseball bat, baseball glove, skateboard, surfboard, tennis racket, person.
