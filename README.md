@@ -1,3 +1,4 @@
+
 # VideoBrain Prototype
 
 ## Introduction
@@ -17,109 +18,62 @@ Latest release changes:
 #### By script
 The script installs both the environment and the prototype in a Linux-based OS. The system is tested only for Ubuntu20.10; to avoid possible installation issues in different OS, the prototype should be installed manually (see next section). 
 
-1. Download in your desired folder the bash script ```install_environment.sh``` from [here] (https://drive.google.com/open?id=1B_QCINqF0wsL8SERLvZeYtuoP_FhnhXd)
+1. Download in your desired folder the bash script ```install_environment.sh``` from [here](https://drive.google.com/open?id=1B_QCINqF0wsL8SERLvZeYtuoP_FhnhXd)
 2. Open the  terminal, and launch the command
-```
-sh install_environment.sh
-```
-    The scripts will install the Python environment (including Anaconda IDE and tools)  
-    ***NOTE***: the script automatically downloads the other script needed for installing the prototype. No additional manual downloads are required.
+	```
+	sh install_environment.sh
+	```
+	 The scripts will install the Python environment (including Anaconda IDE and tools) .
+    ***NOTE***: the other scripts needed for installing the prototype are automatically download. No additional manual downloads are required.
 3. Close the terminal and relaunch it (this is needed for automatically activating the environment)
 4. Launch the script ```install_prototype```:
 ```
 		sh install_prototype.sh
 ```
 5. The system is now ready, the prototype could be launch with the command 
-```
-		sh RunVideoBrain.sh
-```
-or by the command
-```
-			python [path]/web_processor.py
-			```
+	```
+			sh RunVideoBrain.sh
+	```
+	 or by the command
+	```
+		    python [path]/web_processor.py
+	```
 	replacing  [path] with the path folder where the prototype is installed.
 
+#### Manual installation
+1. Download the prototype from [here](https://drive.google.com/open?id=1wndxGkLnA_02ob2awirzlpOSsnq6KAP2).
+2. Extract the source files contained in `Prototype.rar` in the desired folder. There is no need for further actions, but the Python packages reported below should be installed. Note that the code is implemented and tested for Python version **3.8.5**. Be sure to run Python under the right environment.
+3. Install the following packages in the Python environment. Each package of the following list is annotated with the release version used for local testing.
 
+	- opencv-python 4.4.0.46
+	- youtube-dl 2020.11.18
+	- keras 2.4.3
+	- tensorflow 2.3.0
+	- flask 1.1.1
+	- flask_cors 3.0.9
+	- nltk 3.5
+	- pandas 1.1.4
+	- numpy 1.18.1
+	- scipy 1.5.2
+	- gensim 3.8.3
+	- pytrends 4.7.3
+	- pafy 0.5.5
+	- Pillow 8.0.1
+	- matplotlib 3.3.3
+	- python_utils 2.4.0
+	- scikit-learn 0.23.2
+	- beautifulsoup4 4.9.3
+	- flask_restplus 0.13.0
+	- h5py 2.10.0
+	
+	or, from Python shell, launch the following command (be sure `pip` package is installed):
+	
+	```
+	pip install opencv-python==4.4.0.46 youtube-dl==2020.11.18 keras==2.4.3 tensorflow==2.3.0 flask==1.1.1 flask_cors==3.0.9 nltk==3.5 pandas==1.1.4 numpy==1.18.1 scipy==1.5.2 gensim==3.8.3 pytrends==4.7.3 pafy==0.5.5 Pillow==8.0.1 matplotlib==3.3.3 python_utils==2.4.0 scikit-learn==0.23.2 beautifulsoup4==4.9.3 flask_restplus==0.13.0 h5py==2.10.0
+	```
+4. Download the embedding vectors in the folder `model_data`:
+	- For the *English* model, the embeddings could be downloaded from [here](https://s3.amazonaws.com/dl4j-distribution/GoogleNews-vectors-negative300.bin.gz).
+	**Important**: place the file without any other actions. No unzip is needed.
 
-```
-wget https://pjreddie.com/media/files/yolov3.weights
-python convert.py yolov3.cfg yolov3.weights model_data/yolo.h5
-python yolo_video.py [OPTIONS...] --image, for image detection mode, OR
-python yolo_video.py [video_path] [output_path (optional)]
-```
-
-For Tiny YOLOv3, just do in a similar way, just specify model path and anchor path with `--model model_file` and `--anchors anchor_file`.
-
-### Usage
-Use --help to see usage of yolo_video.py:
-```
-usage: yolo_video.py [-h] [--model MODEL] [--anchors ANCHORS]
-                     [--classes CLASSES] [--gpu_num GPU_NUM] [--image]
-                     [--input] [--output]
-
-positional arguments:
-  --input        Video input path
-  --output       Video output path
-
-optional arguments:
-  -h, --help         show this help message and exit
-  --model MODEL      path to model weight file, default model_data/yolo.h5
-  --anchors ANCHORS  path to anchor definitions, default
-                     model_data/yolo_anchors.txt
-  --classes CLASSES  path to class definitions, default
-                     model_data/coco_classes.txt
-  --gpu_num GPU_NUM  Number of GPU to use, default 1
-  --image            Image detection mode, will ignore all positional arguments
-```
----
-
-4. MultiGPU usage: use `--gpu_num N` to use N GPUs. It is passed to the [Keras multi_gpu_model()](https://keras.io/utils/#multi_gpu_model).
-
-## Training
-
-1. Generate your own annotation file and class names file.  
-    One row for one image;  
-    Row format: `image_file_path box1 box2 ... boxN`;  
-    Box format: `x_min,y_min,x_max,y_max,class_id` (no space).  
-    For VOC dataset, try `python voc_annotation.py`  
-    Here is an example:
-    ```
-    path/to/img1.jpg 50,100,150,200,0 30,50,200,120,3
-    path/to/img2.jpg 120,300,250,600,2
-    ...
-    ```
-
-2. Make sure you have run `python convert.py -w yolov3.cfg yolov3.weights model_data/yolo_weights.h5`  
-    The file model_data/yolo_weights.h5 is used to load pretrained weights.
-
-3. Modify train.py and start training.  
-    `python train.py`  
-    Use your trained weights or checkpoint weights with command line option `--model model_file` when using yolo_video.py
-    Remember to modify class path or anchor path, with `--classes class_file` and `--anchors anchor_file`.
-
-If you want to use original pretrained weights for YOLOv3:  
-    1. `wget https://pjreddie.com/media/files/darknet53.conv.74`  
-    2. rename it as darknet53.weights  
-    3. `python convert.py -w darknet53.cfg darknet53.weights model_data/darknet53_weights.h5`  
-    4. use model_data/darknet53_weights.h5 in train.py
-
----
-
-## Some issues to know
-
-1. The test environment is
-    - Python 3.5.2
-    - Keras 2.1.5
-    - tensorflow 1.6.0
-
-2. Default anchors are used. If you use your own anchors, probably some changes are needed.
-
-3. The inference result is not totally the same as Darknet but the difference is small.
-
-4. The speed is slower than Darknet. Replacing PIL with opencv may help a little.
-
-5. Always load pretrained weights and freeze layers in the first stage of training. Or try Darknet training. It's OK if there is a mismatch warning.
-
-6. The training strategy is for reference only. Adjust it according to your dataset and your goal. And add further strategy if needed.
-
-7. For speeding up the training process with frozen layers train_bottleneck.py can be used. It will compute the bottleneck features of the frozen model first and then only trains the last layers. This makes training on CPU possible in a reasonable time. See [this](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html) for more information on bottleneck features.
+	-   For the *Italian* model, the embeddings could be downloaded from [here](https://www.dropbox.com/s/orqfu6mb9cj9ewr/it.tar.gz?dl=0)
+	**Important**: unzip the file content in the same folder. The model file is `it.bin`.
