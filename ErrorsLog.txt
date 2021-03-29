@@ -9,4 +9,9 @@ Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0"
 Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-10 15:59:27 - ERROR for video ZXaSa2vEtF8:
 Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-10 16:02:52 - ERROR for video ZXaSa2vEtF8:
 Cannot interpret feed_dict key as Tensor: Tensor Tensor("keras_learning_phase:0", shape=(), dtype=bool) is not an element of this graph.2021-03-18 14:46:51 - ERROR for video ZXaSa2vEtF8:
-local variable 'get_title' referenced before assignment
+local variable 'get_title' referenced before assignment2021-03-29 15:27:59 - ERROR for video ZXaSa2vEtF8:
+ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-03-29 15:35:43 - ERROR for video ZXaSa2vEtF8:
+name 'models' is not defined2021-03-29 15:39:09 - ERROR for video ZXaSa2vEtF8:
+name 'models' is not defined2021-03-29 15:42:22 - ERROR for video ZXaSa2vEtF8:
+'TagGenerator' object has no attribute 'model'2021-03-29 15:46:21 - ERROR for video ZXaSa2vEtF8:
+'italian'

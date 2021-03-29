@@ -16,16 +16,6 @@ import sys
 
 
 
-def getModel(language):
-    if language == 'italian':
-        model = FastText.load_fasttext_format(f'{os.getcwd()}/model_data/it')
-    elif language == 'english':
-        vec = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
-        model = KeyedVectors.load_word2vec_format(vec, binary=True)
-        #model= Word2Vec(abc.sents())   #only for testing
-    model.init_sims(replace=True)
-    return model
-
 
 def str2bool(string):
     if (string == 'False') or (string == 'false'):
@@ -46,7 +36,6 @@ PORT_NUMBER = int(parser['framework']['PORT_NUMBER'])
 STATIC_URL_PATH = parser['framework']['STATIC_URL_PATH']
 LOG = str2bool(parser['framework']['LOG'])
 load_embedding_model = str2bool(parser['framework']['load_embedding_model'])
-language = parser['framework']['language']
 luminati_username = parser['framework']['luminati_username']
 luminati_password = parser['framework']['luminati_password']
 
@@ -70,6 +59,7 @@ close_up_ratio = float(parser['thumbnails']['close_up_ratio'])
 
 #Tag generator parameters
 n_suggested_tags = int(parser['tags']['n_suggested_tags'])
+language = parser['tags']['language']
 granularity = parser['tags']['granularity']
 output_folder_tags = parser['tags']['output_folder_tags']
 get_title = str2bool(parser['tags']['get_title'])
@@ -77,10 +67,16 @@ get_description = str2bool(parser['tags']['get_description'])
 get_original_tags = str2bool(parser['tags']['get_original_tags'])
 rising_trends = str2bool(parser['tags']['rising_trends'])
 
+
+
 if load_embedding_model:
-    model = getModel(language)
-else:
-    model = None
+    models = dict()
+    models['italian']= FastText.load_fasttext_format(f'{os.getcwd()}/model_data/it')
+    vec = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
+    models['english'] = KeyedVectors.load_word2vec_format(vec, binary=True)
+    #models['english']= Word2Vec(abc.sents())   #only for testing
+    for model in models.values():
+        model.init_sims(replace=True) 
 
 
 

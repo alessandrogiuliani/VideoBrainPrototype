@@ -89,9 +89,7 @@ All configuration parameters are reported below. *Framework  parameters* are the
 -   ***PORT_NUMBER***: the port of the webserver.
 -   ***STATIC_URL_PATH***: the path of the static files folder (CSS, Js, etc.).
 -   ***LOG***: selects if printing (in the Python console) the various message logs during the execution. Type: boolean
--   ***load_embedding_model***: select if loading the embedding model. If True, the relative language embedding (see language parameter) is loaded. If you want to change language, you need to reload the python script (which will restart the server). Type: boolean
--  ***language***: the language of the video or channel.  
-    Note: currently, only English and Italian languages have been implemented.
+-   ***load_embedding_model***: select if loading the embedding models. If True, all implemented language embeddings (see language parameter) are loaded. Type: boolean
 -   ***luminati_username***: the user ID of Luminati proxy service. It is needed to avoid the YouTube temporary ban (it happens when too many requests are sent to the YouTube portal).
     
 -  ***luminati_password***: the password of Luminati proxy service.
@@ -114,7 +112,7 @@ All configuration parameters are reported below. *Framework  parameters* are the
 #### Thumbnail Generation
 
 -   ***output_folder_thumbnails***: the main folder where all generated thumbnails will be saved. Note: for each video, thumbnails will be stored in a subfolder named as the video ID. 
--  ***n_max_frames***: the number of generated thumbnails.  
+-   ***n_max_frames***: the number of generated thumbnails.  
 -   ***method***: the selected algorithm for thumbnail generation. The values correspond to the following algorithms (we named each algorithm as reported in the WEBIST paper):
 	-   BFP: Blur-based Frame Pruning
 	-   CFP: Colorfulness-based Frame Pruning
@@ -125,7 +123,7 @@ All configuration parameters are reported below. *Framework  parameters* are the
 -   ***fsi_threshold***: the threshold used for identifying scene changes (the threshold being the value of the difference between the HSV values of 2 images).   
 -   ***process_faces***: select if predicting faces. If the value is False, Yolo will be adopted to recognize objects in images. We suggest setting the value as False and selecting True only for a single run, as faces are helpful mainly for the “music” domain. In contrast, other domains should rely on YOLO analysis.
 -   ***smile_detection***: select if predicting smiles in detected faces. If the value is True, the smile detector of OpenCV will be adopted.
--  ***open_eye_detection***: determine if predicting open eyes in detected faces. If the value is True, the open-eyes detector of OpenCV will be adopted.
+-   ***open_eye_detection***: determine if predicting open eyes in detected faces. If the value is True, the open-eyes detector of OpenCV will be adopted.
 -   ***close_up_ratio***: if face prediction is selected, this parameter permits the identification of close-up faces. In particular, it sets the minimum size of the face's bounding box to be recognized in terms of image ratio. The parameter ranges from 0 to 1: the more the value is, the larger the face will be recognized. Setting a high value of `close_up_ratio` permits to identify only close-up faces.   
 ***Example***: setting `close_up_ratio = 0.8` means that the systems would identify only faces bounded with a box sized at least 80% of the original frame size.
 -   ***max_length***: the maximum video length (in seconds), meaning that only the first max_length seconds of a video will be analyzed. Cutting long videos is helpful to save computational resources. If the value is 0, the entire video will be downloaded and analyzed.
@@ -134,7 +132,9 @@ All configuration parameters are reported below. *Framework  parameters* are the
 
 #### Tag generation
 
--   ***output_folder_tags***: the main folder where all generated tags will be saved. Note: for each video, thumbnails will be stored in a subfolder named as the video ID. 
+-   ***output_folder_tags***: the main folder where all generated tags will be saved. Note: for each video, thumbnails will be stored in a subfolder named as the video ID.  
+-   ***language***: the language of the video or channel.  
+    **Note**: currently, only English and Italian languages have been implemented. 
 -   ***n_suggested_tags*** : the number of output generated tags. Note: output tags are the most related hot trends
 -   ***granularity***: the granularity level in the tags-trend similarity computation. Values:
 
@@ -155,7 +155,7 @@ To start the server, launch the Python script `web_processor.py`
 
 When the server is running, the prototype could analyze a video by means of a URL string in which all parameters may be set. The URL will be formatted in the following way:
 
-	    hosturl:port/api?parameters
+	hosturl:port/api?parameters
 
 After the symbol “?”, each parameter, separated from others with the char “&”, is in the form *parameter=value*. If a parameter is not explicitly specified, the default value will be loaded from the `config.ini` file.
   
@@ -178,6 +178,7 @@ Example:
 -   ***close_up_ratio***: it sets the minimum size of the face's bounding box to be recognized in terms of image ratio. Values:  *[0.0, 1.0]*  
 -   **max_length**: the maximum video length (in seconds) to be analyzed. Cutting long videos is useful to save computational resources. If the value is 0, the entire video will be downloaded and analyzed.
 -   **ntags**: the number of output generated tags.
+-   **lang**: the language of the video metadata. Values: *italian, english*
 -   **gran**: the granularity level in the tags-trend similarity computation. Values: *WL, SL, CL* 
 -   **get_original_tags**: original tags selection. Values: True/False
 -   **get_title**: video title selection. Values: *True/False*    

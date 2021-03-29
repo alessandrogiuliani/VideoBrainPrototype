@@ -143,7 +143,7 @@ def process_video():
                                 'get_description': description,
                                 'get_original_tags': original_tags,
                                 'rising_trends': rising}
-            tag_handler = TagGenerator(model=model, **tag_parameters)
+            tag_handler = TagGenerator(model=models[lang], **tag_parameters)
     
             tags = tag_handler.getTags(videoid)
             tagString = '</br>'.join(tags)

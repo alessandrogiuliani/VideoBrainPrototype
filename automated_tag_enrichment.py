@@ -21,13 +21,13 @@ import re
 from nltk.corpus import stopwords
 from gensim.models import Word2Vec,KeyedVectors
 from gensim.models.wrappers import FastText
+from nltk.corpus import abc
 from nltk.cluster import KMeansClusterer
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import warnings
 from google_trends_wrapper import utils
 from tag_enrichment_handler import wordlevel, sentencelevel, clusterlevel
-from nltk.corpus import abc
 from nltk.stem import WordNetLemmatizer
 
 #*****************************************************************************
@@ -248,7 +248,7 @@ class TagGenerator(object):
 
     def __init__(self, model=None, **kwargs):
         language = kwargs.get('language', 'english')
-        self.model =  model
+        self.model = model
         self.vectorizer= MySentences(self.model, stop_words=language)
         self.domain = kwargs.get('domain', None)
         if self.domain not in self.mapping_category.keys():
@@ -262,7 +262,8 @@ class TagGenerator(object):
         self.get_title = kwargs.get('get_title', True)
         self.get_description = kwargs.get('get_description', True)
         self.get_original_tags = kwargs.get('get_original_tags', True)
-        self.rising = kwargs.get('rising_trends', True)
+        self.rising = kwargs.get('rising_trends', True)   
+
 
 
 
