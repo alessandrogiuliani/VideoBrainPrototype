@@ -54,7 +54,7 @@ class FSI(object):
         self.open_eyes = kwargs.get('open_eyes', True)
         self.max_length = kwargs.get('max_length', 0)     
         self.process_faces = kwargs.get('process_faces', False)
-
+        self.close_up_ratio = kwargs.get('close_up_ratio', 0.1)
 
 
     def cleanDir(self, folder):
@@ -308,8 +308,9 @@ class FSI(object):
         # face_cascade = cv2.CascadeClassifier(f'{os.getcwd()}/model_data/haarcascade_frontalface_default.xml')
         # Convert into grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        window = (int(gray.shape[0]*self.close_up_ratio), int(gray.shape[1]*self.close_up_ratio))
         # Detect faces
-        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
+        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4, minSize=window)
         predictions = []
         # add the faces
         for (x, y, w, h) in faces:

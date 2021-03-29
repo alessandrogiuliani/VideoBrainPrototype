@@ -66,6 +66,7 @@ process_faces = str2bool(parser['thumbnails']['process_faces'])
 smile_detection = str2bool(parser['thumbnails']['smile_detection'])
 open_eye_detection = str2bool(parser['thumbnails']['open_eye_detection'])
 max_length = int(parser['thumbnails']['max_length'])
+close_up_ratio = float(parser['thumbnails']['close_up_ratio'])
 
 #Tag generator parameters
 n_suggested_tags = int(parser['tags']['n_suggested_tags'])

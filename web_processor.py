@@ -97,6 +97,7 @@ def process_video():
             nframes = request.args.get('nframes', default=n_max_frames, type = int)
             cth = request.args.get('cth', default=corr_threshold, type = float)
             fth = request.args.get('fth', default=fsi_threshold, type = float)
+            close_up_r = request.args.get('close_up_ratio', default=close_up_ratio, type = float)
             faces = str2bool(request.args.get('faces', default=process_faces, type = str))
             tmethod = request.args.get('method', default=method, type = str)
             smiles = str2bool(request.args.get('smiles', default=smile_detection, type = str))
@@ -110,7 +111,8 @@ def process_video():
                     'fsi_threshold': fth,
                     'smiles' : smiles,
                     'open_eyes': open_eyes,
-                    'max_length': m_length}
+                    'max_length': m_length,
+                    'close_up_ratio': close_up_r}
             if tmethod == 'FSI':
                 thumb_handler = FSI(**thumb_parameters)
             elif tmethod == 'DOD':

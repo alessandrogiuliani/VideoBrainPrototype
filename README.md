@@ -126,7 +126,10 @@ All configuration parameters are reported below. *Framework  parameters* are the
 -   ***process_faces***: select if predicting faces. If the value is False, Yolo will be adopted to recognize objects in images. We suggest setting the value as False and selecting True only for a single run, as faces are helpful mainly for the “music” domain. In contrast, other domains should rely on YOLO analysis.
 -   ***smile_detection***: select if predicting smiles in detected faces. If the value is True, the smile detector of OpenCV will be adopted.
 -  ***open_eye_detection***: determine if predicting open eyes in detected faces. If the value is True, the open-eyes detector of OpenCV will be adopted.
+-   ***close_up_ratio***: if face prediction is selected, this parameter permits the identification of close-up faces. In particular, it sets the minimum size of the face's bounding box to be recognized in terms of image ratio. The parameter ranges from 0 to 1: the more the value is, the larger the face will be recognized. Setting a high value of `close_up_ratio` permits to identify only close-up faces.   
+***Example***: setting `close_up_ratio = 0.8` means that the systems would identify only faces bounded with a box sized at least 80% of the original frame size.
 -   ***max_length***: the maximum video length (in seconds), meaning that only the first max_length seconds of a video will be analyzed. Cutting long videos is helpful to save computational resources. If the value is 0, the entire video will be downloaded and analyzed.
+
     
 
 #### Tag generation
@@ -171,10 +174,11 @@ Example:
 -   **fth**: the threshold used for identifying scene changes (the threshold being the value of the difference between the HSV values of 2 images).
 -   **faces**: select if predicting faces. Values:  *True/False*    
 -   **smiles**: select if predicting smiles in detected faces. Values:  *True/False*    
--   **open_eyes**: select if predicting open eyes in detected faces.  *True/False*     
+-   **open_eyes**: select if predicting open eyes in detected faces.  *True/False*
+***close_up_ratio***: it sets the minimum size of the face's bounding box to be recognized in terms of image ratio. Values:  *[0.0, 1.0]*     
 -   **max_length**: the maximum video length (in seconds) to be analyzed. Cutting long videos is useful to save computational resources. If the value is 0, the entire video will be downloaded and analyzed.
 -   **ntags**: the number of output generated tags.
--   **gran**: the granularity level in the tags-trend similarity computation. Values: **WL, SL, CL** 
+-   **gran**: the granularity level in the tags-trend similarity computation. Values: *WL, SL, CL* 
 -   **get_original_tags**: original tags selection. Values: True/False
 -   **get_title**: video title selection. Values: *True/False*    
 -   **get_description**: video description selection. Values:  *True/False*    

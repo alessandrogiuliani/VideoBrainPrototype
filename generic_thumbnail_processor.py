@@ -59,7 +59,7 @@ class GenericThumbnailProcessor(object):
         self.open_eyes = kwargs.get('open_eyes', True)
         self.max_length = kwargs.get('max_length', 0)
         self.opener = kwargs.get('opener', None)
-
+        self.close_up_ratio = kwargs.get('close_up_ratio', 0.1)
 
 
 
@@ -544,8 +544,9 @@ class GenericThumbnailProcessor(object):
         img = cv2.imread(imageFile)
         # Convert into grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        window = (int(gray.shape[0]*self.close_up_ratio), int(gray.shape[1]*self.close_up_ratio))
         # Detect faces
-        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4)
+        faces = self.face_cascade.detectMultiScale(gray, 1.1, 4, minSize=window)
         predictions = {
                         "predictions": []
                         }
