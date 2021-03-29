@@ -175,7 +175,7 @@ Example:
 -   **faces**: select if predicting faces. Values:  *True/False*    
 -   **smiles**: select if predicting smiles in detected faces. Values:  *True/False*    
 -   **open_eyes**: select if predicting open eyes in detected faces.  *True/False*
-***close_up_ratio***: it sets the minimum size of the face's bounding box to be recognized in terms of image ratio. Values:  *[0.0, 1.0]*     
+***close_up_ratio***: it sets the minimum size of the face's bounding box to be recognized in terms of image ratio. Values:  *[0.0, 1.0]*  
 -   **max_length**: the maximum video length (in seconds) to be analyzed. Cutting long videos is useful to save computational resources. If the value is 0, the entire video will be downloaded and analyzed.
 -   **ntags**: the number of output generated tags.
 -   **gran**: the granularity level in the tags-trend similarity computation. Values: *WL, SL, CL* 
