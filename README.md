@@ -6,8 +6,8 @@
 The prototype is entirely implemented in Python language. It embeds several packages, be sure to have installed all dependencies, as reported in the following section. The prototype has been tested in a specific Linux-based environment. See the section “Virtual Machine” for all info. 
 
 Latest release changes: 
-- Tag generation: added rising trends retrieval (in combination with top trends)
-- Tag generation: added the option of considering video title and description. 
+- Close up face recognition added
+- Now language models are pre-loaded simultaneously 
 
 
 
@@ -197,3 +197,8 @@ Depending on the selected domain, the system will perform the elaboration in dif
 	-   **tech**: tvmonitor, laptop, mouse, remote, keyboard, cell phone, microwave, oven, toaster;
 	-   **animals**: bird, cat, dog, horse, sheep, cow, elephant, bear, zebra, giraffe;
 	-   **sport**: bicycle, car, motorbike, frisbee, skis, snowboard, sports ball, kite, baseball bat, baseball glove, skateboard, surfboard, tennis racket, person.
+	
+## Future implementations
+
+- **Language models** Further langua models might be included. Embedding vectors may be found [here]( https://github.com/Kyubyong/wordvectors) or [here](https://fasttext.cc/docs/en/crawl-vectors.html)
+- **Integration of further domains** Further domains may be implemented. Google Trends categories may be chosen from [here](https://github.com/pat310/google-trends-api/wiki/Google-Trends-Categories) 
