@@ -314,7 +314,7 @@ class DOD(object):
             json.dump(best_frames, f, indent=4, separators=(',', ': '), sort_keys=True)
         for file in best_frames:
             fname = self.path_leaf(file['file'])
-            new_name = f'{workDir}/selected_{fname.split("_")[1]}.jpg'
+            new_name = f'{workDir}/finalThumb_{fname.split("_")[1]}.jpg'
             os.rename(file['file'], new_name)
         images = glob.glob(f'{workDir}/*')
         for filename in images:

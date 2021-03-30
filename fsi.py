@@ -226,7 +226,7 @@ class FSI(object):
                 fnumb = file['fnumb']
                 fname = file['fname']
                 old = workdir+'/'+fname
-                new_name = workdir+ '/'+'finalThumb '+str(fnumb)+'.jpg'
+                new_name = workdir+ '/'+'finalThumb_'+str(fnumb)+'.jpg'
                 os.rename(old, new_name)
             images = glob.glob(workdir+'/'+'*')
             for filename in images:
