@@ -14,4 +14,9 @@ ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-03-29 15:35:4
 name 'models' is not defined2021-03-29 15:39:09 - ERROR for video ZXaSa2vEtF8:
 name 'models' is not defined2021-03-29 15:42:22 - ERROR for video ZXaSa2vEtF8:
 'TagGenerator' object has no attribute 'model'2021-03-29 15:46:21 - ERROR for video ZXaSa2vEtF8:
-'italian'
+'italian'2021-03-31 16:12:17 - ERROR for video TM_VBxt94xA:
+ERROR: TM_VBxt94xA: Youtube says: Unable to extract video data2021-03-31 17:36:43 - ERROR for video TM_VBxt94xA:
+ERROR: TM_VBxt94xA: Youtube says: Unable to extract video data2021-04-02 09:40:49 - ERROR for video ZXaSa2vEtF8:
+ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-04-02 09:40:59 - ERROR for video ZXaSa2vEtF8:
+ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-04-02 09:41:06 - ERROR for video ZXaSa2vEtF8:
+ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data

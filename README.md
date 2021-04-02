@@ -46,7 +46,7 @@ The script installs both the environment and the prototype in a Linux-based OS. 
 3. Install the following packages in the Python environment. Each package of the following list is annotated with the release version used for local testing.
 
 	- opencv-python 4.4.0.46
-	- youtube-dl 2020.11.18
+	- youtube-dl 2021.4.1
 	- keras 2.4.3
 	- tensorflow 2.3.0
 	- flask 1.1.1
@@ -69,7 +69,7 @@ The script installs both the environment and the prototype in a Linux-based OS. 
 	or, from Python shell, launch the following command (be sure `pip` package is installed):
 	
 	```
-	pip install opencv-python==4.4.0.46 youtube-dl==2020.11.18 keras==2.4.3 tensorflow==2.3.0 flask==1.1.1 flask_cors==3.0.9 nltk==3.5 pandas==1.1.4 numpy==1.18.1 scipy==1.5.2 gensim==3.8.3 pytrends==4.7.3 pafy==0.5.5 Pillow==8.0.1 matplotlib==3.3.3 python_utils==2.4.0 scikit-learn==0.23.2 beautifulsoup4==4.9.3 flask_restplus==0.13.0 h5py==2.10.0
+	pip install opencv-python==4.4.0.46 youtube-dl==2021.4.1 keras==2.4.3 tensorflow==2.3.0 flask==1.1.1 flask_cors==3.0.9 nltk==3.5 pandas==1.1.4 numpy==1.18.1 scipy==1.5.2 gensim==3.8.3 pytrends==4.7.3 pafy==0.5.5 Pillow==8.0.1 matplotlib==3.3.3 python_utils==2.4.0 scikit-learn==0.23.2 beautifulsoup4==4.9.3 flask_restplus==0.13.0 h5py==2.10.0
 	```
 4. Download the embedding vectors in the folder `model_data`:
 	- For the *English* model, the embeddings could be downloaded from [here](https://s3.amazonaws.com/dl4j-distribution/GoogleNews-vectors-negative300.bin.gz).  

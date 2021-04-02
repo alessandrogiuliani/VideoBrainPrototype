@@ -132,9 +132,6 @@ class FSI(object):
         image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         image = Image.fromarray(image)
         prediction = yoloInstance.detect_img(image, self.domain)
-        for item in prediction:
-            if item['class'] == 'person':
-                item['score'] = item['score'] * 0.01
         return prediction
     
     
@@ -147,7 +144,7 @@ class FSI(object):
             video_manager.set_duration(duration = FrameTimecode(timecode=float(self.max_length), 
                                                                 fps = video_manager.get_framerate()))
         scene_manager = SceneManager(StatsManager())
-        scene_manager.add_detector(ContentDetector(self.fsi_threshold))
+        scene_manager.add_detector(ContentDetector(self.fsi_threshold, min_scene_len=15))
         base_timecode = video_manager.get_base_timecode()
         try:
             # Set downscale factor to improve processing speed.

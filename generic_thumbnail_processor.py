@@ -366,8 +366,8 @@ class GenericThumbnailProcessor(object):
             blur_prediction = 0
             if (frame_num in frame_series) == True: 
                 blur_prediction = self.estimate_blur(frame)[0]#blur frames
-                cv2.imwrite(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg', frame)
-                if self.log: print(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}_{blur_prediction}.jpg')
+                cv2.imwrite(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}.jpg', frame)
+                if self.log: print(f'{outputFolder}/{v_id}/localMaxFrame_{frame_num}.jpg')
             # Draw additional info
             frame_info = f'Frame: {frame_num}, FPS: {fps:.2f}, Score: {blur_prediction}'
             cv2.putText(frame, frame_info, (10, frame.shape[0]-10),
@@ -451,7 +451,7 @@ class GenericThumbnailProcessor(object):
             json.dump(best_frames, f, indent=4, separators=(',', ': '), sort_keys=True)
         for file in best_frames:
             fname = self.path_leaf(file['file'])
-            new_name = workDir+fname.replace('localMaxFrame', 'selected')
+            new_name = workDir+fname.replace('localMaxFrame', 'finalThumb')
             os.rename(file['file'], new_name)
         images = glob.glob(workDir+'*')
         for filename in images:
