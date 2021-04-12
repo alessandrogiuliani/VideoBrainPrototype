@@ -98,11 +98,21 @@ class GenericThumbnailProcessor(object):
 
 
     
-    def getBestVideo(self, video):
+    def getBestVideo(self, video, width_limit=10000):
         if self.log: print("-- Getting best video")
-        streams = video.streams
-        logger.info(streams)
-        return video.getbest(preftype="mp4").url
+        streams = video.allstreams
+        res = None
+        for s in streams:
+            if s.mediatype in ('normal', 'video') and \
+                    s.extension=='mp4' and \
+                    ('av01' not in s._info.get('vcodec')):  
+                width = s.dimensions[0]
+                if width <= width_limit:
+                    if res is None:
+                        res = s
+                        continue
+                    if  width > res.dimensions[0]: res = s
+        return res.url
     
     
     

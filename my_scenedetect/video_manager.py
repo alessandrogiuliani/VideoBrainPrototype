@@ -234,7 +234,11 @@ def open_captures(video_files, framerate=None, validate_parameters=True):
     cap_list = []
 
     try:
-        cap_list = [cv2.VideoCapture(video_file) for video_file in video_files]
+        cap_list = []
+        for video_file in video_files:
+            cap = cv2.VideoCapture(video_file)
+            cap_list.append(cap)
+            #print('-------------------------------------------------\n\n', cap.set(6, cv2.VideoWriter_fourcc('a', 'v', '0', '1')))
         video_names = [get_video_name(video_file) for video_file in video_files]
         closed_caps = [video_names[i] for i, cap in
                        enumerate(cap_list) if not cap.isOpened()]
