@@ -29,6 +29,9 @@ import warnings
 from google_trends_wrapper import utils
 from tag_enrichment_handler import wordlevel, sentencelevel, clusterlevel
 from nltk.stem import WordNetLemmatizer
+import pafy
+from textblob import TextBlob
+from nltk.stem import WordNetLemmatizer
 
 #*****************************************************************************
 #***********************  Global initialization   ****************************
@@ -209,7 +212,20 @@ class YouTubeMetaExtractor(object):
         tags = soup.find_all("meta",  property="og:video:tag")
         return [x['content'] for x in tags]
 
-
+    def noun_tokenizer(self, string):
+        tokenized = nltk.word_tokenize(string)
+        is_noun = lambda pos: pos[:2] == 'NN'
+        nouns = [word.lower() for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos) and word.isalpha() and len(word)>2]
+        return list(set(nouns))
+        
+        
+    ############ YT Video Metadata Extractor ##############
+    def extract_meta_data(self, videoURL):        
+        video = pafy.new(videoURL)
+        tags = video.keywords
+        title = self.noun_tokenizer(video.title)
+        description = self.noun_tokenizer(video.description)
+        return tags + title + description
 
 
     def get_relatedTags(self, relatedLinks):
@@ -288,22 +304,32 @@ class TagGenerator(object):
     def getCandidateTrends(self):
         self.candidate_trends = self.catIds.set_related_searches(self.domain, self.Gcategory, rising = self.rising)
 
-
-
+    
+    
+    def singularize(self, tokens):
+        wnl = WordNetLemmatizer()
+        return [wnl.lemmatize(wrd) for wrd in tokens]
+    
+    
 
     def getTags(self, videoId):
         videoURL = f'https://www.youtube.com/watch?v={videoId}'
         yt_handler = YouTubeMetaExtractor(videoURL, get_original_tags=self.get_original_tags, get_title=self.get_title, get_description=self.get_description)
         #textual_meta = yt_handler.get_tags(videoURL)
-        textual_meta = yt_handler.properties
-        parsedOriginalTags = get_tags_sentence(textual_meta, word2vec=self.model)
+        #textual_meta = yt_handler.properties
+        textual_meta = self.singularize(extract_meta_data(videoURL))
+        parsed = get_tags_sentence(textual_meta, word2vec=self.model)
         self.getCandidateTrends()
-        if len(parsedOriginalTags) == 0:
+        if len(parsed) == 0:
             return []
-        return self.selector.select_trends(parsedOriginalTags,
+        suggested_trends = self.selector.select_trends(parsed,
                           self.candidate_trends,
                           self.n_trends,
                           self.vectorizer)
-
+        suggested_tags_from_metainfo = self.selector.select_trends([self.domain],
+                          parsed,
+                          self.n_trends,
+                          self.vectorizer)
+        return suggested_tags_from_metainfo, suggested_trends
 
 

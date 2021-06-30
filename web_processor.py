@@ -145,9 +145,10 @@ def process_video():
                                 'rising_trends': rising}
             tag_handler = TagGenerator(model=models[lang], **tag_parameters)
     
-            tags = tag_handler.getTags(videoid)
-            tagString = '</br>'.join(tags)
-            resString += f'<p>Generated tags:</br>{tagString}'
+            kw_tags, trend_tags = tag_handler.getTags(videoid)
+            tagString = '</br>'.join(kw_tags)
+            trendString = '</br>'.join(trend_tags)
+            resString += f'<p>Generated tags from meta info:</br>{tagString}</p><p>Generated tags from trends:</br>{trendString}</p>'
             local_folder = f'{output_folder_tags}/{videoid}'
             if not os.path.exists(local_folder):
                 os.makedirs(local_folder)

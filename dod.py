@@ -145,11 +145,13 @@ class DOD(object):
         prediction=[]
         dist = self.compareHist(img, compair, isFile = False) if compair is not None else 0       
         if dist <= self.corr_threshold:
-            if (self.domain == 'music') or (self.process_faces is True):
+            if (self.domain == 'music'):
                 prediction = self.predictFaces(img)
             else:
                 image = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
                 prediction = yoloInstance.detect_img(image, self.domain)
+                if (self.process_faces is True):
+                    prediction += self.predictFaces(img)
             for item in prediction:
                 if item['class'] == 'person':
                     item['score'] = item['score'] * 0.01
@@ -235,6 +237,8 @@ class DOD(object):
             frame_num += 1
             prediction = self.predict_img(frame, target)
             target = frame
+            if len(prediction) < self.n_max_frames:
+                pass
             if len(prediction) > 0:
                 series.append(frame_num)
                 metadata.append(prediction)

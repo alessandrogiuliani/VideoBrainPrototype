@@ -288,11 +288,14 @@ class GenericThumbnailProcessor(object):
                         except:
                             print('File Open Error! Try again!')
                         if self.log: print('Try to make a prediction on faces.')
-                        if self.process_faces or self.domain=='music':
+                        if self.domain=='music':
                             predictions = self.predictFaces(file)
                             metainfo['predictions'] = predictions['predictions']
                         else:                            
                             metainfo['predictions'] = yoloInstance.detect_img(image, self.domain)
+                            if self.process_faces:
+                                predictions = self.predictFaces(file)
+                                metainfo['predictions'] += predictions['predictions']
                         metadata.append(metainfo)
                         count = count + 1
                     except:

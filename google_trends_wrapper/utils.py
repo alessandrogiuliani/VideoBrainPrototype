@@ -44,7 +44,7 @@ class CategoryRead(object):
 
 
 
-    def set_related_searches(self, video_category, pytrend_category,  limit=None, rising=True):
+    def set_related_searches(self, video_category, pytrend_category,  limit=None, rising=False):
         results = []
         self.pytrend.build_payload(kw_list=[], cat=pytrend_category,gprop='youtube', geo=self.geo,timeframe='today 1-m')
         related_queries_dict = self.pytrend.related_queries()
@@ -67,13 +67,14 @@ class CategoryRead(object):
         if (related_queries_dict['top'] is not None):
             top5 = related_queries_dict['top']['query'].values
             for item in top5:
-                if item not in result:
-                    result.append(item)
+                low = item.lower()
+                if low not in result:
+                    result.append(low)
         if rising:
             if (related_queries_dict['rising'] is not None):
                 top5 = related_queries_dict['rising']['query'].values
-                for item in top5:
-                  result.append(item)
+                for low in top5:
+                  result.append(low)
         return result
 
 
@@ -81,15 +82,18 @@ class CategoryRead(object):
 
     def __get_related_topics_trends(self, df:pd.DataFrame,category):
         result = []
-        for item in df.loc[df['hasData'] == True]['topic_title'].values[0:3]:
-            result.append(item)
-        for topic in df.loc[df['hasData']==True]['topic_mid'].values[0:3]:
+        df_temp = df.loc[df['topic_type'] == 'Topic']
+        for item in df_temp.loc[df_temp['hasData'] == True]['topic_title'].values[0:3]:
+            low = item.lower()
+            result.append(low)
+        for topic in df_temp.loc[df_temp['hasData']==True]['topic_mid'].values[0:3]:
             self.pytrend.build_payload(kw_list=[], gprop='youtube', geo=self.geo,timeframe='today 1-m', url=topic)
             related_queries_dict = self.pytrend.related_queries()
             related_topics_results=self.__get_related_searches(related_queries_dict[topic])
             for item in related_topics_results:
-                if item not in result:
-                    result.append(item)
+                low = item.lower()
+                if low not in result:
+                    result.append(low)
         return result
 
 

@@ -273,10 +273,12 @@ class FSI(object):
                     if self.log: print('Can\'t read video data. Potential end of stream')
                     return self.getFinalThumbnails(workdir, metadata)
                 if frame_num in framesList:
-                    if (self.domain == 'music') or (self.process_faces is True):
+                    if (self.domain == 'music'):
                         prediction = self.predictFaces(frame)
                     else:
                         prediction = self.predict_img(frame)
+                        if (self.process_faces is True):
+                            prediction += self.predict_img(frame)
                     if len(prediction) > 0:
                         meta_info = {}
                         fname = 'localMaxFrame_'+str(frame_num) + '.jpg'
