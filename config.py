@@ -66,6 +66,8 @@ get_title = str2bool(parser['tags']['get_title'])
 get_description = str2bool(parser['tags']['get_description'])
 get_original_tags = str2bool(parser['tags']['get_original_tags'])
 rising_trends = str2bool(parser['tags']['rising_trends'])
+top_trends = str2bool(parser['tags']['top_trends'])
+
 
 
 

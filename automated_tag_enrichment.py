@@ -40,6 +40,9 @@ warnings.filterwarnings('ignore')
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('abc')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+
 # #EMBEDDING_FILE = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
 
 
@@ -250,7 +253,7 @@ class TagGenerator(object):
     selectors = {'WL' : wordlevel,
                  'SL' : sentencelevel,
                  'CL' : clusterlevel}
-    languages = {'english': 'US',
+    languages = {'english': 'GB',
                  'italian': 'IT'}
     mapping_category = {'food': catIds.get_category_id('Food & Drink'),
                         'cars': catIds.get_category_id('Autos & Vehicles'),
@@ -278,6 +281,7 @@ class TagGenerator(object):
         self.get_title = kwargs.get('get_title', True)
         self.get_description = kwargs.get('get_description', True)
         self.get_original_tags = kwargs.get('get_original_tags', True)
+        self.top = kwargs.get('top_trends', True) 
         self.rising = kwargs.get('rising_trends', True)   
 
 
@@ -302,7 +306,7 @@ class TagGenerator(object):
 
 
     def getCandidateTrends(self):
-        self.candidate_trends = self.catIds.set_related_searches(self.domain, self.Gcategory, rising = self.rising)
+        self.candidate_trends = self.catIds.set_related_searches(self.domain, self.Gcategory, top=self.top, rising = self.rising)
 
     
     
@@ -317,7 +321,7 @@ class TagGenerator(object):
         yt_handler = YouTubeMetaExtractor(videoURL, get_original_tags=self.get_original_tags, get_title=self.get_title, get_description=self.get_description)
         #textual_meta = yt_handler.get_tags(videoURL)
         #textual_meta = yt_handler.properties
-        textual_meta = self.singularize(extract_meta_data(videoURL))
+        textual_meta = self.singularize(yt_handler.extract_meta_data(videoURL))
         parsed = get_tags_sentence(textual_meta, word2vec=self.model)
         self.getCandidateTrends()
         if len(parsed) == 0:

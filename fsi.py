@@ -237,8 +237,14 @@ class FSI(object):
                 os.rename(old, new_name)
             images = glob.glob(workdir+'/'+'*')
             for filename in images:
+                os.rename(old, new_name)
                 if 'localMaxFrame' in filename:
                     os.unlink(filename)
+        else:
+            images = glob.glob(workdir+'/'+'*')
+            for filename in images:
+                os.rename(filename, filename.replace('localMaxFrame', 'finalThumb'))
+
     
     
         
@@ -278,7 +284,7 @@ class FSI(object):
                     else:
                         prediction = self.predict_img(frame)
                         if (self.process_faces is True):
-                            prediction += self.predict_img(frame)
+                            prediction += self.predictFaces(frame)
                     if len(prediction) > 0:
                         meta_info = {}
                         fname = 'localMaxFrame_'+str(frame_num) + '.jpg'

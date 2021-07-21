@@ -115,6 +115,6 @@ def select_trends(tags, trends, num_trends, sentence_vectorizer):
 .groupby(['google_trends'])\
 .apply(weighting_match).reset_index()
         intermediate_df = intermediate_df.sort_values(['similarity_word_2_vec'],ascending=[False]).head(num_trends)
-    return intermediate_df[['google_trends', 'similarity_word_2_vec']], all_df
+    return list(intermediate_df['google_trends'])
 
 

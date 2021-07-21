@@ -278,8 +278,8 @@ class GenericThumbnailProcessor(object):
                         if self.log: print(f'Image {count}, {self.path_leaf(file)} compare {dist}. {isChanged}')
                         metainfo = {}
                         metainfo['file'] = file
-                        metainfo['frame'] = fname.split('_')[1]
-                        metainfo['blur'] = fname.split('_')[2].split('.')[0]
+                        metainfo['frame'] = fname.split('_')[0]
+                        metainfo['blur'] = fname.split('_')[1].split('.')[0]
                         metainfo['scene'] = scene_counter
                         metainfo['corr'] = dist
                         try:
