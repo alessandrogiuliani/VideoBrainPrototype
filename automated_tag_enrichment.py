@@ -225,12 +225,24 @@ class YouTubeMetaExtractor(object):
     ############ YT Video Metadata Extractor ##############
     def extract_meta_data(self, videoURL):        
         video = pafy.new(videoURL)
-        tags = video.keywords
-        title = self.noun_tokenizer(video.title)
-        description = self.noun_tokenizer(video.description)
-        return tags + title + description
+        res = list()
+        if self.get_original_tags:
+            res += video.keywords
+        if self.get_title:
+            res += self.noun_tokenizer(video.title)
+        if self.get_description:
+            res += self.noun_tokenizer(re.sub(r'^(https)|(http)?:\/\/.*[\r\n]*', '', video.description, flags=re.MULTILINE))     
+        return res
 
 
+    
+    def get_title_tokens(self, videoURL):
+        video = pafy.new(videoURL)
+        self.video_title = video.title
+        return self.noun_tokenizer(self.video_title)
+    
+    
+    
     def get_relatedTags(self, relatedLinks):
         relatedTags = {k: [self.get_metaProperties(k)] for k in relatedLinks}
         self.properties['relatedtags'] = relatedTags
@@ -260,7 +272,8 @@ class TagGenerator(object):
                         'animals': catIds.get_category_id('Pets & Animals'),
                         'tech': catIds.get_category_id('Computers & Electronics'),
                         'music': catIds.get_category_id('Music & Audio'),
-                        'sport': catIds.get_category_id('Sports')}
+                        'sport': catIds.get_category_id('Sports'),
+                        'news': catIds.get_category_id('News')}
 
 
 
@@ -310,6 +323,15 @@ class TagGenerator(object):
 
     
     
+    def getTitleTrends(self, title_tokens):
+        results = list()
+        for token in title_tokens:
+            results += self.catIds.get_trends_by_keyword(token, top=self.top, rising = self.rising)
+        self.title_trends = set(results)
+
+        
+        
+    
     def singularize(self, tokens):
         wnl = WordNetLemmatizer()
         return [wnl.lemmatize(wrd) for wrd in tokens]
@@ -324,6 +346,8 @@ class TagGenerator(object):
         textual_meta = self.singularize(yt_handler.extract_meta_data(videoURL))
         parsed = get_tags_sentence(textual_meta, word2vec=self.model)
         self.getCandidateTrends()
+        title_tokens = [word for word in yt_handler.get_title_tokens(videoURL) if word not in self.vectorizer.stop_words]
+        self.getTitleTrends(title_tokens)
         if len(parsed) == 0:
             return []
         suggested_trends = self.selector.select_trends(parsed,
@@ -334,6 +358,10 @@ class TagGenerator(object):
                           parsed,
                           self.n_trends,
                           self.vectorizer)
-        return suggested_tags_from_metainfo, suggested_trends
+        suggested_trends_from_title = self.selector.select_trends(title_tokens,
+                          self.title_trends,
+                          self.n_trends,
+                          self.vectorizer)
+        return suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title
 
 

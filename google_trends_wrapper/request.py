@@ -156,7 +156,6 @@ class TrendReq(object):
             'tz': self.tz,
             'req': {'comparisonItem': [], 'category': cat, 'property': gprop}
         }
-
         # build out json for each keyword
         for kw in self.kw_list:
             keyword_payload = {'keyword': kw, 'time': timeframe,

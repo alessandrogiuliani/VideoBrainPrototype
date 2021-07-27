@@ -108,6 +108,15 @@ class FSI(object):
         return res.url
     
     
+    def getNormalVideo(self, video, width_limit=10000):
+        if self.log: print("-- Getting best video")
+        streams = video.allstreams
+        res = list()
+        for s in streams:
+            if s.mediatype == 'normal' and \
+                    ('av01' not in s._info.get('vcodec')):  
+                res.append(s.url)
+        return res
     
     
     def path_leaf(self, path):
@@ -237,7 +246,6 @@ class FSI(object):
                 os.rename(old, new_name)
             images = glob.glob(workdir+'/'+'*')
             for filename in images:
-                os.rename(old, new_name)
                 if 'localMaxFrame' in filename:
                     os.unlink(filename)
         else:
@@ -262,9 +270,14 @@ class FSI(object):
             if self.log: print("after pafy")
             video = self.getBestVideo(videoPafy)
         else:
-            v_id = ''        
+            v_id = ''  
         workdir = self.createWorkDir(v_id, outputFolder)
-        framesList = self.differentsFrames(video)
+        try:
+            framesList = self.differentsFrames(video)
+        except:
+            videoPafy = pafy.new(video_url)
+            video = self.getNormalVideo(videoPafy)[0]
+            framesList = self.differentsFrames(video)
         print("Detected Frames : ", len(framesList))
         cam = cv2.VideoCapture(video)
         if not cam.isOpened():

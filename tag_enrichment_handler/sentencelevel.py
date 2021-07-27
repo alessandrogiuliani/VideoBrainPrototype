@@ -30,6 +30,7 @@ TEMPLATE = ['Category',
 def select_trends(tags, trends, num_trends, sentence_vectorizer):
     tags_df = pd.DataFrame(columns=TEMPLATE)
     keywords_emb = sentence_vectorizer.sent2vec(" ".join(tags))
+    print(" ".join(tags))
     sentences=list(set(trends).difference(set(tags)))
     print (len(sentences), ' sentences ' )
     for sentence in sentences:

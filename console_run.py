@@ -157,8 +157,8 @@ if args.gen_tags:
                         'top_trends': args.top_trends,
                         'rising_trends': args.rising_trends}
     tag_handler = TagGenerator(model=models[args.lang], **tag_parameters)
-    suggested_tags_from_metainfo, suggested_trends = tag_handler.getTags(args.id)
-    resString += f'\n\nGenerated tags:\nFrom video metadata: {suggested_tags_from_metainfo}\nFrom trends: {suggested_trends}\n\n'
+    suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title = tag_handler.getTags(args.id)
+    resString += f'\n\nGenerated tags:\n\n- From video metadata: {suggested_tags_from_metainfo}\n\n- From trends: {suggested_trends}\n\n- Trends from title: {suggested_trends_from_title}\n\n'
 #a = jsonify(success=True)
 print(resString)
 
