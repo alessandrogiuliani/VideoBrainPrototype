@@ -30,7 +30,6 @@ TEMPLATE = ['Category',
 def select_trends(tags, trends, num_trends, sentence_vectorizer):
     tags_df = pd.DataFrame(columns=TEMPLATE)
     keywords_emb = sentence_vectorizer.sent2vec(" ".join(tags))
-    print(" ".join(tags))
     sentences=list(set(trends).difference(set(tags)))
     print (len(sentences), ' sentences ' )
     for sentence in sentences:
@@ -67,12 +66,12 @@ def select_trends(tags, trends, num_trends, sentence_vectorizer):
     dummy['label_braycurtis'] = 0
     #dummy['label_EMD'] = 0
     for row, group in dummy.sort_values(['similarity_word_2_vec']).groupby(['Category','videoUrl']):
-        dummy.loc[group.index,'label_cosine']=__mask_lower(group['cosine'],group['cosine'].mean())
-        dummy.loc[group.index,'label_cityblock']=__mask_lower(group['cityblock'],group['cityblock'].mean())
-        dummy.loc[group.index,'label_canberra_distance']=__mask_lower(group['canberra_distance'],group['canberra_distance'].mean())
-        dummy.loc[group.index,'label_euclidean']=__mask_lower(group['euclidean'],group['euclidean'].mean())
-        dummy.loc[group.index,'label_minkowski']=__mask_lower(group['minkowski'],group['minkowski'].mean())
-        dummy.loc[group.index,'label_braycurtis']=__mask_lower(group['braycurtis'],group['braycurtis'].mean())
+        dummy.loc[group.index,'label_cosine']=1
+        dummy.loc[group.index,'label_cityblock']=1
+        dummy.loc[group.index,'label_canberra_distance']=1
+        dummy.loc[group.index,'label_euclidean']=1
+        dummy.loc[group.index,'label_minkowski']=1
+        dummy.loc[group.index,'label_braycurtis']=1
         #dummy.loc[group.index,'label_EMD']=__mask_lower(group['EMD'],group['EMD'].mean())
         final_df= dummy.sort_values(['similarity_word_2_vec'],ascending=[False])\
 .loc[(dummy['label_cosine']==1)&(dummy['label_cityblock']==1)&(dummy['label_canberra_distance']==1)&(dummy['label_minkowski']==1)&(dummy['label_euclidean']==1)&(dummy['label_braycurtis']==1)]\

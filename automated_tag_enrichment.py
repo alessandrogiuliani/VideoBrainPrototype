@@ -6,6 +6,7 @@ Created on Wed Sep 30 13:42:30 2020
 
 """
 from pandas.io.json import json_normalize
+import json
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
@@ -98,6 +99,10 @@ class MySentences(object):
     def __init__(self, model, stop_words='english', coco_categories:pd.DataFrame=None):
         self.model = model
         self.coco_categories = coco_categories
+        if stop_words == 'italian':
+            with open(f'{os.getcwd()}/model_data/stopwords-it.txt') as f:
+                self.stop_words = [line.replace('\n', '') for line in f.readlines()]
+                return
         self.stop_words = stopwords.words(stop_words)
     
 
@@ -193,6 +198,10 @@ class YouTubeMetaExtractor(object):
         return properties
         
 
+    def get_channel(self, link):
+        webpage = urlopen(link).read()
+        soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
+        return soup.find_all("link",  itemprop="name")[0]['content']
 
 
 
@@ -231,7 +240,7 @@ class YouTubeMetaExtractor(object):
         if self.get_title:
             res += self.noun_tokenizer(video.title)
         if self.get_description:
-            res += self.noun_tokenizer(re.sub(r'^(https)|(http)?:\/\/.*[\r\n]*', '', video.description, flags=re.MULTILINE))     
+            res += self.noun_tokenizer(re.sub(r'(https)|(http)?:\/\/\S*', '', video.description, flags=re.MULTILINE))     
         return res
 
 
@@ -275,13 +284,19 @@ class TagGenerator(object):
                         'sport': catIds.get_category_id('Sports'),
                         'news': catIds.get_category_id('News')}
 
-
+    mapping_italian = {'food': ['Cibo', 'bevande'],
+                        'cars': ['auto', 'moto'],
+                        'animals': ['animali'],
+                        'tech': ['tecnologia'],
+                        'music': ['musica'],
+                        'sport': ['sport'],
+                        'news': ['notizie']}
 
 
     def __init__(self, model=None, **kwargs):
-        language = kwargs.get('language', 'english')
+        self.language = kwargs.get('language', 'english')
         self.model = model
-        self.vectorizer= MySentences(self.model, stop_words=language)
+        self.vectorizer= MySentences(self.model, stop_words=self.language)
         self.domain = kwargs.get('domain', None)
         if self.domain not in self.mapping_category.keys():
             print('Error: no valid domain selected')
@@ -290,7 +305,7 @@ class TagGenerator(object):
         self.selector = self.selectors[granularity]
         self.n_trends = kwargs.get('n_suggested_tags', 5)
         self.google_trends = {}
-        self.catIds = utils.CategoryRead(geo=self.languages[language])
+        self.catIds = utils.CategoryRead(geo=self.languages[self.language])
         self.get_title = kwargs.get('get_title', True)
         self.get_description = kwargs.get('get_description', True)
         self.get_original_tags = kwargs.get('get_original_tags', True)
@@ -337,31 +352,47 @@ class TagGenerator(object):
         return [wnl.lemmatize(wrd) for wrd in tokens]
     
     
+    
+    def get_YT_suggestions(self, query):
+        query_formatted = query.replace(' ', '%20')
+        url = f'http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q={query_formatted}%20'
+        response = urlopen(url)
+        data_json = json.loads(response.read())
+        return data_json[1]
+
 
     def getTags(self, videoId):
         videoURL = f'https://www.youtube.com/watch?v={videoId}'
         yt_handler = YouTubeMetaExtractor(videoURL, get_original_tags=self.get_original_tags, get_title=self.get_title, get_description=self.get_description)
         #textual_meta = yt_handler.get_tags(videoURL)
         #textual_meta = yt_handler.properties
-        textual_meta = self.singularize(yt_handler.extract_meta_data(videoURL))
-        parsed = get_tags_sentence(textual_meta, word2vec=self.model)
+        textual_meta = yt_handler.extract_meta_data(videoURL)
+        #parsed = get_tags_sentence(textual_meta, word2vec=self.model)
+        parsed = [word for word in textual_meta if word not in self.vectorizer.stop_words]
         self.getCandidateTrends()
         title_tokens = [word for word in yt_handler.get_title_tokens(videoURL) if word not in self.vectorizer.stop_words]
         self.getTitleTrends(title_tokens)
+        channel_name = yt_handler.get_channel(videoURL)
+        yt_suggestions = self.get_YT_suggestions(channel_name)[:self.n_trends]
         if len(parsed) == 0:
             return []
+        if self.language == 'english': 
+            domain = [self.domain]
+        elif self.language == 'italian': 
+            domain = self.mapping_italian[self.domain]
         suggested_trends = self.selector.select_trends(parsed,
                           self.candidate_trends,
                           self.n_trends,
                           self.vectorizer)
-        suggested_tags_from_metainfo = self.selector.select_trends([self.domain],
+        print(parsed)
+        suggested_tags_from_metainfo = self.selector.select_trends(domain,
                           parsed,
                           self.n_trends,
                           self.vectorizer)
-        suggested_trends_from_title = self.selector.select_trends(title_tokens,
+        suggested_trends_from_title = self.selector.select_trends(parsed,
                           self.title_trends,
                           self.n_trends,
                           self.vectorizer)
-        return suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title
+        return suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title, channel_name, title_tokens, yt_suggestions
 
 

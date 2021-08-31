@@ -123,7 +123,7 @@ class CategoryRead(object):
         if df.empty:
             return []
         df_temp = df.loc[df['topic_type'] == 'Topic']
-        for item in df_temp['topic_title'].values:
+        for item in df['topic_title'].values:
             low = item.lower()
             result.append(low)
         # for topic in df_temp['topic_mid'].values:
