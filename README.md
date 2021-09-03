@@ -149,6 +149,7 @@ All configuration parameters are reported below. *Framework  parameters* are the
 ***Note***: at least one among title, description, and original tags must be selected to let the prototype work properly.
 
 ***Output***
+
 The system generates the following types of tags:
 - ***Channel Name***: the name of the video's channel;
 - ***Tags from title***: the tokens extracted from title string;
