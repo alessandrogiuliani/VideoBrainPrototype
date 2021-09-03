@@ -148,8 +148,8 @@ All configuration parameters are reported below. *Framework  parameters* are the
 -   ***rising_trends***: if the value is True, also the “rising” trends of a given topic will be retrieved. If it is False, only “top” trends will be retrieved. 
 ***Note***: at least one among title, description, and original tags must be selected to let the prototype work properly.
 
-***Output**
-The system generates the following tags types:
+***Output***
+The system generates the following types of tags:
 - ***Channel Name***: the name of the video's channel;
 - ***Tags from title***: the tokens extracted from title string;
 - ***Tags from textual metadata***: the meaningful words extracted from textual metadata;
