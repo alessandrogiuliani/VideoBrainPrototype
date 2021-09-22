@@ -154,7 +154,7 @@ def process_video():
             if not os.path.exists(local_folder):
                 os.makedirs(local_folder)
             with open(f'{local_folder}/GeneratedTags.txt', 'w') as f:
-                f.write(tagString)
+                f.write(resString)
         a = jsonify(success=True)
         busy = False
         return f'\r\rVideo {videoid} successfully processed.{resString}'
