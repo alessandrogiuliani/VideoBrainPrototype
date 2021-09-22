@@ -32,6 +32,7 @@ def select_trends(tags, trends, num_trends, sentence_vectorizer):
     keywords_emb = sentence_vectorizer.sent2vec(" ".join(tags))
     sentences=list(set(trends).difference(set(tags)))
     print (len(sentences), ' sentences ' )
+    final_df = None
     for sentence in sentences:
         sentence_emb = sentence_vectorizer.sent2vec(sentence)
         if len(sentence_emb) == 0:
@@ -77,6 +78,8 @@ def select_trends(tags, trends, num_trends, sentence_vectorizer):
 .loc[(dummy['label_cosine']==1)&(dummy['label_cityblock']==1)&(dummy['label_canberra_distance']==1)&(dummy['label_minkowski']==1)&(dummy['label_euclidean']==1)&(dummy['label_braycurtis']==1)]\
 .groupby(['Category','videoUrl'])['videoUrl','similarity_word_2_vec','google_trends'].head(num_trends)\
 .reset_index()
+    if final_df is None:
+        return None
     return list(final_df['google_trends'])
 
 
