@@ -33,8 +33,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
-#opener = startOpener()
-#opener.open('https://www.youtube.com')
+opener = startOpener()
+opener.open('https://www.youtube.com')
 
 
 
