@@ -86,36 +86,22 @@ if load_embedding_model:
 
 
 
-def startOpener()  :  
+def startOpener()  :
     if sys.version_info[0]==2:
         import six
         from six.moves.urllib import request
-        import random
-        port = 22225
-        session_id = random.random()
-        super_proxy_url = f'http://{luminati_username}-session-{session_id}:{luminati_password}@zproxy.lum-superproxy.io:{port}'
-        proxy_handler = request.ProxyHandler({
-                'http': super_proxy_url,
-                'https': super_proxy_url,
-                })
-        opener = request.build_opener(proxy_handler)
-        opener.addheaders = \
-            [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')]
-    
-    
+        opener = request.build_opener(
+            request.ProxyHandler(
+                {'http': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225',
+                'https': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225'}))
+        print(opener.open('http://lumtest.com/myip.json').read())
     if sys.version_info[0]==3:
         import urllib.request
-        import random
-        port = 22225
-        session_id = random.random()
-        super_proxy_url = f'http://{luminati_username}-session-{session_id}:{luminati_password}@zproxy.lum-superproxy.io:{port}'
-        proxy_handler = urllib.request.ProxyHandler({
-                                                    'http': super_proxy_url,
-                                                    'https': super_proxy_url,
-                                                    })
-        opener = urllib.request.build_opener(proxy_handler)
-        opener.addheaders = \
-        [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')]
+        opener = urllib.request.build_opener(
+            urllib.request.ProxyHandler(
+                {'http': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225',
+                'https': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225'}))
+        print(opener.open('http://lumtest.com/myip.json').read())
     return opener
 
 

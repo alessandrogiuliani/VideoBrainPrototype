@@ -19,13 +19,13 @@ import argparse
 from gensim.models import Word2Vec,KeyedVectors
 from gensim.models.wrappers import FastText
 import os
-import googleapiclient.discovery
-import googleapiclient.errors
-from oauth2client import client # Added
-from oauth2client import tools # Added
-from oauth2client.file import Storage # Added
+#import googleapiclient.discovery
+#import googleapiclient.errors
+#from oauth2client import client # Added
+#from oauth2client import tools # Added
+#from oauth2client.file import Storage # Added
 import pafy
-
+from urllib.request import Request
 
 ############ Sessions and authentication ###############
 # def connect_api(client_secrets_file, credential_sample_file):
@@ -67,8 +67,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
-#opener = startOpener()
-#opener.open('https://www.youtube.com')
+opener = startOpener()
+opener.open('https://www.youtube.com')
 
 parser = argparse.ArgumentParser(description='VideoBrain prototype started!')
 

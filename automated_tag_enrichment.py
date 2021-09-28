@@ -290,7 +290,7 @@ class TagGenerator(object):
                         'tech': ['tecnologia'],
                         'music': ['musica'],
                         'sport': ['sport'],
-                        'news': ['notizie']}
+                        'news': ['notizie']} 
 
 
     def __init__(self, model=None, **kwargs):
