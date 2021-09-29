@@ -33,6 +33,8 @@ from nltk.stem import WordNetLemmatizer
 import pafy
 from textblob import TextBlob
 from nltk.stem import WordNetLemmatizer
+from config import startOpener
+
 
 #*****************************************************************************
 #***********************  Global initialization   ****************************
@@ -160,6 +162,7 @@ class YouTubeMetaExtractor(object):
     
     
     def __init__(self, ytURL, **kwargs):
+        self.opener = kwargs.get('opener', None)
         self.videoURLToken = 'https://www.youtube.com'
         self.searchURLToken = 'https://www.youtube.com/results?search_query='
         self.get_title = kwargs.get('get_title', True)
@@ -184,6 +187,7 @@ class YouTubeMetaExtractor(object):
         
     def get_metaProperties(self, link):
         properties = list()
+        self.opener.open(link)
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
         if self.get_original_tags:
@@ -195,12 +199,15 @@ class YouTubeMetaExtractor(object):
         if self.get_description:
             description = soup.find_all("meta",  property="og:description")[0]['content']
             properties.append(description)
+        self.opener.close()
         return properties
         
 
     def get_channel(self, link):
+        self.opener.open(link)
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
+        self.opener.close()
         return soup.find_all("link",  itemprop="name")[0]['content']
 
 
@@ -219,9 +226,11 @@ class YouTubeMetaExtractor(object):
 
 
     def get_tags(self, link):
+        self.opener.open(link)
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, "lxml")
         tags = soup.find_all("meta",  property="og:video:tag")
+        self.opener.close()
         return [x['content'] for x in tags]
 
     def noun_tokenizer(self, string):
@@ -232,7 +241,8 @@ class YouTubeMetaExtractor(object):
         
         
     ############ YT Video Metadata Extractor ##############
-    def extract_meta_data(self, videoURL):        
+    def extract_meta_data(self, videoURL):
+        self.opener.open(videoURL)        
         video = pafy.new(videoURL)
         res = list()
         if self.get_original_tags:
@@ -240,14 +250,17 @@ class YouTubeMetaExtractor(object):
         if self.get_title:
             res += self.noun_tokenizer(video.title)
         if self.get_description:
-            res += self.noun_tokenizer(re.sub(r'(https)|(http)?:\/\/\S*', '', video.description, flags=re.MULTILINE))     
+            res += self.noun_tokenizer(re.sub(r'(https)|(http)?:\/\/\S*', '', video.description, flags=re.MULTILINE)) 
+        self.opener.close()
         return res
 
 
     
     def get_title_tokens(self, videoURL):
+        self.opener.open(videoURL)
         video = pafy.new(videoURL)
         self.video_title = video.title
+        self.opener.close()
         return self.noun_tokenizer(self.video_title)
     
     
@@ -361,9 +374,13 @@ class TagGenerator(object):
         return data_json[1]
 
 
-    def getTags(self, videoId):
+    def getTags(self, videoId, opener=None):
         videoURL = f'https://www.youtube.com/watch?v={videoId}'
-        yt_handler = YouTubeMetaExtractor(videoURL, get_original_tags=self.get_original_tags, get_title=self.get_title, get_description=self.get_description)
+        yt_handler = YouTubeMetaExtractor(videoURL, 
+                                          get_original_tags=self.get_original_tags, 
+                                          get_title=self.get_title, 
+                                          get_description=self.get_description, 
+                                          opener=opener)
         #textual_meta = yt_handler.get_tags(videoURL)
         #textual_meta = yt_handler.properties
         textual_meta = yt_handler.extract_meta_data(videoURL)

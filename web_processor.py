@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
 opener = startOpener()
-opener.open('https://www.youtube.com')
+#opener.open('https://www.youtube.com')
 
 
 
@@ -142,7 +142,8 @@ def process_video():
                                 'get_title': title,
                                 'get_description': description,
                                 'get_original_tags': original_tags,
-                                'rising_trends': rising}
+                                'rising_trends': rising,
+                                'opener': opener}
             tag_handler = TagGenerator(model=models[lang], **tag_parameters)
     
             stm, st, stt, ch, tt, yt = tag_handler.getTags(videoid)
