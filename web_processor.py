@@ -142,11 +142,10 @@ def process_video():
                                 'get_title': title,
                                 'get_description': description,
                                 'get_original_tags': original_tags,
-                                'rising_trends': rising,
-                                'opener': opener}
+                                'rising_trends': rising}
             tag_handler = TagGenerator(model=models[lang], **tag_parameters)
     
-            stm, st, stt, ch, tt, yt = tag_handler.getTags(videoid)
+            stm, st, stt, ch, tt, yt = tag_handler.getTags(videoid, opener=opener)
             resString += f'''\n\nGenerated tags:\n\n- Channel Name: {ch}\n\n- 
             Tags from title: {tt}\n\n- Tags from textual metadata: {stm}\n\n- 
             Trends from title: {stt}\n\n- Trends from category: {st}\n\n- 
