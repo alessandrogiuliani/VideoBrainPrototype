@@ -216,11 +216,13 @@ class YouTubeMetaExtractor(object):
         queryParameter = '+'.join(self.properties['title'].split()).encode('utf-8')
         relatedSearch = f'{self.searchURLToken}{queryParameter}'
         print(relatedSearch)
+        self.opener.open(relatedSearch)
         temp = urlopen(relatedSearch)
         webpage = temp.read()
         soup = BeautifulSoup(webpage, 'lxml')
         data = soup.find_all("a", class_ = "yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink spf-link")
         relatedUrls= [(self.videoURLToken + x.get('href')) for x in data if x.get('href') not in relatedSearch]
+        self.opener.close()
         return relatedUrls
         
 
@@ -366,11 +368,13 @@ class TagGenerator(object):
     
     
     
-    def get_YT_suggestions(self, query):
+    def get_YT_suggestions(self, query, opener=None):
         query_formatted = query.replace(' ', '%20')
         url = f'http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q={query_formatted}%20'
+        self.opener.open(url)
         response = urlopen(url)
         data_json = json.loads(response.read())
+        self.opener.close()
         return data_json[1]
 
 
@@ -390,7 +394,7 @@ class TagGenerator(object):
         title_tokens = [word for word in yt_handler.get_title_tokens(videoURL) if word not in self.vectorizer.stop_words]
         self.getTitleTrends(title_tokens)
         channel_name = yt_handler.get_channel(videoURL)
-        yt_suggestions = self.get_YT_suggestions(channel_name)[:self.n_trends]
+        yt_suggestions = self.get_YT_suggestions(channel_name, opener=opener)[:self.n_trends]
         if len(parsed) == 0:
             return []
         if self.language == 'english': 
