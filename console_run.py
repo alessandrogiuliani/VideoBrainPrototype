@@ -158,7 +158,7 @@ if args.gen_tags:
                         'top_trends': args.top_trends,
                         'rising_trends': args.rising_trends}
     tag_handler = TagGenerator(model=models[args.lang], **tag_parameters)
-    suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title, channel_tag, title_tokens, yt_suggestions = tag_handler.getTags(args.id)
+    suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title, channel_tag, title_tokens, yt_suggestions = tag_handler.getTags(args.id, opener=opener)
     resString += f'''\n\nGenerated tags:\n\n- Channel Name: {channel_tag}\n\n- Tags from title: {title_tokens}\n\n- Tags from textual metadata: {suggested_tags_from_metainfo}\n\n- Tags from trends:
 {suggested_trends_from_title}\n\n- YouTube search bar suggestions: {yt_suggestions}\n\n'''
     local_folder = f'{output_folder_tags}/{args.id}'

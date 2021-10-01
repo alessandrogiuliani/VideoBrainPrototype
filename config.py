@@ -94,14 +94,12 @@ def startOpener()  :
             request.ProxyHandler(
                 {'http': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225',
                 'https': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225'}))
-        print(opener.open('http://lumtest.com/myip.json').read())
     if sys.version_info[0]==3:
         import urllib.request
         opener = urllib.request.build_opener(
             urllib.request.ProxyHandler(
                 {'http': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225',
                 'https': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225'}))
-        print(opener.open('http://lumtest.com/myip.json').read())
     return opener
 
 

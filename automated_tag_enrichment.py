@@ -30,8 +30,7 @@ import warnings
 from google_trends_wrapper import utils
 from tag_enrichment_handler import wordlevel, sentencelevel, clusterlevel
 from nltk.stem import WordNetLemmatizer
-import pafy
-from textblob import TextBlob
+import pafy 
 from nltk.stem import WordNetLemmatizer
 from config import startOpener
 
@@ -371,10 +370,10 @@ class TagGenerator(object):
     def get_YT_suggestions(self, query, opener=None):
         query_formatted = query.replace(' ', '%20')
         url = f'http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q={query_formatted}%20'
-        self.opener.open(url)
+        opener.open(url)
         response = urlopen(url)
         data_json = json.loads(response.read())
-        self.opener.close()
+        opener.close()
         return data_json[1]
 
 
