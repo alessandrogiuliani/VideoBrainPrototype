@@ -40,7 +40,7 @@ debug = False #Assing True only for testing. It loads a very small model to use 
 
 if load_embedding_model:
     models = dict()
-    if args.debug:
+    if debug:
         models['english']= Word2Vec(abc.sents())   #only for testing
     else:
         models['italian']= FastText.load_fasttext_format(f'{os.getcwd()}/model_data/it')

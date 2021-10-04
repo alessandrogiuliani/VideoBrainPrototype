@@ -19,4 +19,5 @@ ERROR: TM_VBxt94xA: Youtube says: Unable to extract video data2021-03-31 17:36:4
 ERROR: TM_VBxt94xA: Youtube says: Unable to extract video data2021-04-02 09:40:49 - ERROR for video ZXaSa2vEtF8:
 ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-04-02 09:40:59 - ERROR for video ZXaSa2vEtF8:
 ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-04-02 09:41:06 - ERROR for video ZXaSa2vEtF8:
-ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data
+ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-10-04 13:52:03 - ERROR for video 4VMBuAPzhKY:
+[WinError 2] Impossibile trovare il file specificato: './experiments/temp//4VMBuAPzhKY/localMaxFrame_100.jpg' -> './experiments/temp//4VMBuAPzhKY/finalThumb_100.jpg'
