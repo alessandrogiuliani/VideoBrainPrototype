@@ -15,7 +15,9 @@ from config import *
 from werkzeug.exceptions import InternalServerError
 import time
 from urllib.error import HTTPError
-
+from gensim.models import Word2Vec,KeyedVectors
+from gensim.models.wrappers import FastText
+from nltk.corpus import abc
 
 #*****************************************************************************
 #***********************   Parameters settings    ****************************
