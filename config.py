@@ -23,7 +23,6 @@ def str2bool(string):
     return True
 
 
-
 cfg = f'{os.getcwd()}/config/config.ini'
 
 
@@ -70,15 +69,6 @@ top_trends = str2bool(parser['tags']['top_trends'])
 
 
 
-
-if load_embedding_model:
-    models = dict()
-    models['italian']= FastText.load_fasttext_format(f'{os.getcwd()}/model_data/it')
-    vec = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
-    models['english'] = KeyedVectors.load_word2vec_format(vec, binary=True)
-    #models['english']= Word2Vec(abc.sents())   #only for testing
-    for model in models.values():
-        model.init_sims(replace=True) 
 
 
 

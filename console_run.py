@@ -47,6 +47,10 @@ from urllib.request import Request
 API_KEY = 'AIzaSyDC3IWQ-Ugkzn_aKsi3NdMFkyUsj6_KKW0'
 pafy.set_api_key(API_KEY)
 
+
+
+
+
 #*****************************************************************************
 #***********************   Parameters settings    ****************************
 #*****************************************************************************
@@ -68,7 +72,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
 opener = startOpener()
-opener.open('https://www.youtube.com')
+#opener.open('https://www.youtube.com')
 
 parser = argparse.ArgumentParser(description='VideoBrain prototype started!')
 
@@ -107,18 +111,21 @@ parser.add_argument('-GD', '--get_description', required=False, default=get_desc
 parser.add_argument('-GO', '--get_original_tags', required=False, default=get_original_tags, type=str2bool)
 parser.add_argument('-TT', '--top_trends', required=False, default=top_trends, type=str2bool)
 parser.add_argument('-R', '--rising_trends', required=False, default=rising_trends, type=str2bool)
+parser.add_argument('-D', '--debug', required=False, default=False, type=str2bool)
 
 
 args = parser.parse_args()
 resString = ''
 videoURL = 'https://www.youtube.com/watch?v=' + args.id
-if args.EMBEDDING:
+
+if args.EMBEDDING or load_embedding_model:
     models = dict()
-    models['italian']= FastText.load_fasttext_format(f'{os.getcwd()}/model_data/it')
-    vec = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
-    models['english'] = KeyedVectors.load_word2vec_format(vec, binary=True)
-    
-    #models['english']= Word2Vec(abc.sents())   #only for testing
+    if args.debug:
+        models['english']= Word2Vec(abc.sents())   #only for testing
+    else:
+        models['italian']= FastText.load_fasttext_format(f'{os.getcwd()}/model_data/it')
+        vec = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
+        models['english'] = KeyedVectors.load_word2vec_format(vec, binary=True)
     for key, value in models.items():
         value.init_sims(replace=True)
 if args.gen_thumb:
@@ -131,7 +138,8 @@ if args.gen_thumb:
                 'smiles': args.smiles,
                 'open_eyes' : args.open_eyes,
                 'max_length': args.max_length,
-                'close_up_ratio': args.close_up_ratio}
+                'close_up_ratio': args.close_up_ratio,
+                'opener': opener}
     tmethod = args.method
     if tmethod == 'FSI': 
         thumb_handler = FSI(**thumb_parameters)

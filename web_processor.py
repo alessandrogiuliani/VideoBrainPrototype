@@ -36,7 +36,18 @@ logging.getLogger('flask_cors').level = logging.DEBUG
 opener = startOpener()
 #opener.open('https://www.youtube.com')
 
+debug = False #Assing True only for testing. It loads a very small model to use less resources
 
+if load_embedding_model:
+    models = dict()
+    if args.debug:
+        models['english']= Word2Vec(abc.sents())   #only for testing
+    else:
+        models['italian']= FastText.load_fasttext_format(f'{os.getcwd()}/model_data/it')
+        vec = f'{os.getcwd()}/model_data/GoogleNews-vectors-negative300.bin.gz'
+        models['english'] = KeyedVectors.load_word2vec_format(vec, binary=True)
+    for key, value in models.items():
+        value.init_sims(replace=True)
 
 
 #*****************************************************************************
@@ -112,7 +123,8 @@ def process_video():
                     'smiles' : smiles,
                     'open_eyes': open_eyes,
                     'max_length': m_length,
-                    'close_up_ratio': close_up_r}
+                    'close_up_ratio': close_up_r,
+                    'opener': opener}
             if tmethod == 'FSI':
                 thumb_handler = FSI(**thumb_parameters)
             elif tmethod == 'DOD':

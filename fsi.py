@@ -55,7 +55,7 @@ class FSI(object):
         self.max_length = kwargs.get('max_length', 0)     
         self.process_faces = kwargs.get('process_faces', False)
         self.close_up_ratio = kwargs.get('close_up_ratio', 0.1)
-
+        self.opener = kwargs.get('opener', None)
 
     def cleanDir(self, folder):
         for filename in os.listdir(folder):
@@ -363,7 +363,9 @@ class FSI(object):
     def processVideo(self, videoURL, outputFolder):
         if self.log:
             print("Processing at: "+os.getcwd())
+        self.opener.open(videoURL)
         self.getImgseries(videoURL, outputFolder)
+        self.opener.close()
         print("-- Extract frame ok")
     
 

@@ -64,6 +64,7 @@ class GenericThumbnailProcessor(object):
 
 
 
+
     def cleanDir(self, folder):
         for filename in os.listdir(folder):
             file_path = os.path.join(folder, filename)
@@ -496,6 +497,7 @@ class GenericThumbnailProcessor(object):
 
     #use
     def processVideo(self, video_url, outputFolder):
+        self.opener.open(video_url)
         if self.log: print("Processing at: "+os.getcwd())
         blur_series, colorfulness_series = self.processColorAndBlur(video_url)
         print("-- Blur colorfulness series ok")
@@ -525,6 +527,7 @@ class GenericThumbnailProcessor(object):
         print(f"-- Selected metadata length: {len(metadata)}")
         with open(workdir+'/metadata.json', 'w') as f:
             json.dump(metadata, f, indent=4, separators=(',', ': '), sort_keys=True)
+            self.opener.close()
         return self.getColorResults(workdir, average_cut)
     
     

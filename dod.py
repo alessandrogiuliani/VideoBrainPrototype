@@ -57,7 +57,7 @@ class DOD(object):
         self.max_length = kwargs.get('max_length', 0)    
         self.process_faces = kwargs.get('process_faces', False)
         self.close_up_ratio = kwargs.get('close_up_ratio', 0.1)
-        
+        self.opener = kwargs.get('opener', None)
 
 
     def cleanDir(self, folder):
@@ -388,6 +388,7 @@ class DOD(object):
     
    
     def processVideo(self, url, outputFolder):
+        self.opener.open(url)
         serie, metadata = self.getImgseries(url)   
         tmp = metadata    
         average_cut = np.average(serie)
@@ -410,6 +411,7 @@ class DOD(object):
         print(f"-- Selected metadata length: {len(metadata)}")
         with open(f'{workdir}/metadata.json', 'w') as f:
             json.dump(metadata, f, indent=4, separators=(',', ': '), sort_keys=True)
+        self.opener.close()
         return self.getColorResults(workdir, average_cut)
 
 
