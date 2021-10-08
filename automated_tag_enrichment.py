@@ -30,7 +30,7 @@ import warnings
 from google_trends_wrapper import utils
 from tag_enrichment_handler import wordlevel, sentencelevel, clusterlevel
 from nltk.stem import WordNetLemmatizer
-import pafy 
+import my_pafy as pafy
 from nltk.stem import WordNetLemmatizer
 from config import startOpener
 
@@ -178,7 +178,7 @@ class YouTubeMetaExtractor(object):
         self.url = ytURL
         self.videoID = ytURL.replace('https://www.youtube.com/watch?v=', '') 
         self.storeRelatedVideos = kwargs.get('storeRelatedVideos', True)
-        self.properties = self.get_metaProperties(ytURL)
+        #self.properties = self.extract_meta_data(ytURL)
         #self.get_relatedTags(self.get_relatedSearchLinks())
         
         
@@ -186,7 +186,7 @@ class YouTubeMetaExtractor(object):
         
     def get_metaProperties(self, link):
         properties = list()
-        self.opener.open(link)
+        if self.opener is not None: self.opener.open(link)
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
         if self.get_original_tags:
@@ -198,15 +198,15 @@ class YouTubeMetaExtractor(object):
         if self.get_description:
             description = soup.find_all("meta",  property="og:description")[0]['content']
             properties.append(description)
-        self.opener.close()
+        if self.opener is not None: self.opener.close()
         return properties
         
 
     def get_channel(self, link):
-        self.opener.open(link)
+        if self.opener is not None: self.opener.open(link)
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
-        self.opener.close()
+        if self.opener is not None: self.opener.close()
         return soup.find_all("link",  itemprop="name")[0]['content']
 
 
@@ -215,23 +215,23 @@ class YouTubeMetaExtractor(object):
         queryParameter = '+'.join(self.properties['title'].split()).encode('utf-8')
         relatedSearch = f'{self.searchURLToken}{queryParameter}'
         print(relatedSearch)
-        self.opener.open(relatedSearch)
+        if self.opener is not None: self.opener.open(relatedSearch)
         temp = urlopen(relatedSearch)
         webpage = temp.read()
         soup = BeautifulSoup(webpage, 'lxml')
         data = soup.find_all("a", class_ = "yt-uix-tile-link yt-ui-ellipsis yt-ui-ellipsis-2 yt-uix-sessionlink spf-link")
         relatedUrls= [(self.videoURLToken + x.get('href')) for x in data if x.get('href') not in relatedSearch]
-        self.opener.close()
+        if self.opener is not None: self.opener.close()
         return relatedUrls
         
 
 
     def get_tags(self, link):
-        self.opener.open(link)
+        if self.opener is not None: self.opener.open(link)
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, "lxml")
         tags = soup.find_all("meta",  property="og:video:tag")
-        self.opener.close()
+        if self.opener is not None: self.opener.close()
         return [x['content'] for x in tags]
 
     def noun_tokenizer(self, string):
@@ -243,7 +243,7 @@ class YouTubeMetaExtractor(object):
         
     ############ YT Video Metadata Extractor ##############
     def extract_meta_data(self, videoURL):
-        self.opener.open(videoURL)        
+        if self.opener is not None: self.opener.open(videoURL)        
         video = pafy.new(videoURL)
         res = list()
         if self.get_original_tags:
@@ -252,16 +252,16 @@ class YouTubeMetaExtractor(object):
             res += self.noun_tokenizer(video.title)
         if self.get_description:
             res += self.noun_tokenizer(re.sub(r'(https)|(http)?:\/\/\S*', '', video.description, flags=re.MULTILINE)) 
-        self.opener.close()
+        if self.opener is not None: self.opener.close()
         return res
 
 
     
     def get_title_tokens(self, videoURL):
-        self.opener.open(videoURL)
+        if self.opener is not None: self.opener.open(videoURL)
         video = pafy.new(videoURL)
         self.video_title = video.title
-        self.opener.close()
+        if self.opener is not None: self.opener.close()
         return self.noun_tokenizer(self.video_title)
     
     
@@ -325,7 +325,7 @@ class TagGenerator(object):
         self.get_original_tags = kwargs.get('get_original_tags', True)
         self.top = kwargs.get('top_trends', True) 
         self.rising = kwargs.get('rising_trends', True)   
-
+        self.opener = kwargs.get('opener', None)   
 
 
 
@@ -367,23 +367,23 @@ class TagGenerator(object):
     
     
     
-    def get_YT_suggestions(self, query, opener=None):
+    def get_YT_suggestions(self, query):
         query_formatted = query.replace(' ', '%20')
         url = f'http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q={query_formatted}%20'
-        opener.open(url)
+        if self.opener is not None: self.opener.open(url)
         response = urlopen(url)
         data_json = json.loads(response.read())
-        opener.close()
+        if self.opener is not None: self.opener.close()
         return data_json[1]
 
 
-    def getTags(self, videoId, opener=None):
+    def getTags(self, videoId):
         videoURL = f'https://www.youtube.com/watch?v={videoId}'
         yt_handler = YouTubeMetaExtractor(videoURL, 
                                           get_original_tags=self.get_original_tags, 
                                           get_title=self.get_title, 
                                           get_description=self.get_description, 
-                                          opener=opener)
+                                          opener=self.opener)
         #textual_meta = yt_handler.get_tags(videoURL)
         #textual_meta = yt_handler.properties
         textual_meta = yt_handler.extract_meta_data(videoURL)
@@ -393,13 +393,14 @@ class TagGenerator(object):
         title_tokens = [word for word in yt_handler.get_title_tokens(videoURL) if word not in self.vectorizer.stop_words]
         self.getTitleTrends(title_tokens)
         channel_name = yt_handler.get_channel(videoURL)
-        yt_suggestions = self.get_YT_suggestions(channel_name, opener=opener)[:self.n_trends]
+        yt_suggestions = self.get_YT_suggestions(channel_name)[:self.n_trends]
         if len(parsed) == 0:
             return []
         if self.language == 'english': 
             domain = [self.domain]
         elif self.language == 'italian': 
             domain = self.mapping_italian[self.domain]
+        print(parsed)
         suggested_trends = self.selector.select_trends(parsed,
                           self.candidate_trends,
                           self.n_trends,

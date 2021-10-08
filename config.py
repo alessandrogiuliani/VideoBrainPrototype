@@ -11,7 +11,7 @@ from gensim.models import Word2Vec,KeyedVectors
 from gensim.models.wrappers import FastText
 from nltk.corpus import abc
 import sys
-
+import requests
 
 
 
@@ -66,12 +66,6 @@ get_description = str2bool(parser['tags']['get_description'])
 get_original_tags = str2bool(parser['tags']['get_original_tags'])
 rising_trends = str2bool(parser['tags']['rising_trends'])
 top_trends = str2bool(parser['tags']['top_trends'])
-
-
-
-
-
-
 
 
 

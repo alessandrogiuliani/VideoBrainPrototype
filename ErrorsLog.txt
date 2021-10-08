@@ -20,4 +20,37 @@ ERROR: TM_VBxt94xA: Youtube says: Unable to extract video data2021-04-02 09:40:4
 ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-04-02 09:40:59 - ERROR for video ZXaSa2vEtF8:
 ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-04-02 09:41:06 - ERROR for video ZXaSa2vEtF8:
 ERROR: ZXaSa2vEtF8: Youtube says: Unable to extract video data2021-10-04 13:52:03 - ERROR for video 4VMBuAPzhKY:
-[WinError 2] Impossibile trovare il file specificato: './experiments/temp//4VMBuAPzhKY/localMaxFrame_100.jpg' -> './experiments/temp//4VMBuAPzhKY/finalThumb_100.jpg'
+[WinError 2] Impossibile trovare il file specificato: './experiments/temp//4VMBuAPzhKY/localMaxFrame_100.jpg' -> './experiments/temp//4VMBuAPzhKY/finalThumb_100.jpg'2021-10-04 14:40:58 - ERROR for video _QIaSG0olH4:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 14:41:45 - ERROR for video BY3wI-5K_io:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 14:48:23 - ERROR for video BY3wI-5K_io:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 15:03:11 - ERROR for video BY3wI-5K_io:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 15:26:46 - ERROR for video BY3wI-5K_io:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 15:27:12 - ERROR for video BY3wI-5K_io:
+HTTP Error 429: Too Many Requests2021-10-04 15:27:40 - ERROR for video BY3wI-5K_io:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 15:27:54 - ERROR for video BY3wI-5K_io:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 15:39:44 - ERROR for video BY3wI-5K_io:
+Youtube Error 403: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.2021-10-04 15:49:42 - ERROR for video BY3wI-5K_io:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-04 15:55:15 - ERROR for video BY3wI-5K_io:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-05 09:11:54 - ERROR for video aDW6MKbw9Jc:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-05 09:16:14 - ERROR for video aDW6MKbw9Jc:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-05 09:21:23 - ERROR for video aDW6MKbw9Jc:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-05 09:24:26 - ERROR for video aDW6MKbw9Jc:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-05 09:30:06 - ERROR for video aDW6MKbw9Jc:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-05 09:30:40 - ERROR for video aDW6MKbw9Jc:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-07 12:11:47 - ERROR for video QEjF3pRZWQQ:
+'italian'2021-10-07 12:15:53 - ERROR for video QEjF3pRZWQQ:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-07 12:25:53 - ERROR for video QEjF3pRZWQQ:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-08 08:35:36 - ERROR for video b99nHNNdKXw:
+'italian'2021-10-08 08:36:06 - ERROR for video b99nHNNdKXw:
+'ascii' codec can't encode characters in position 96-97: ordinal not in range(128)2021-10-08 08:40:03 - ERROR for video b99nHNNdKXw:
+'ascii' codec can't encode characters in position 96-97: ordinal not in range(128)2021-10-08 09:48:39 - ERROR for video _KBO_nUmAv4:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-08 09:51:06 - ERROR for video _KBO_nUmAv4:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-08 10:14:25 - ERROR for video _KBO_nUmAv4:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-08 10:30:42 - ERROR for video _KBO_nUmAv4:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-08 10:40:20 - ERROR for video _KBO_nUmAv4:
+<urlopen error [WinError 10060] Impossibile stabilire la connessione. Risposta non corretta della parte connessa dopo l'intervallo di tempo oppure mancata risposta dall'host collegato>2021-10-08 10:47:17 - ERROR for video _KBO_nUmAv4:
+'list' object has no attribute 'reshape'2021-10-08 10:52:13 - ERROR for video IctXH39zZCI:
+list index out of range2021-10-08 10:55:39 - ERROR for video IctXH39zZCI:
+list index out of range2021-10-08 11:18:19 - ERROR for video IctXH39zZCI:
+ERROR: Video unavailable2021-10-08 11:19:05 - ERROR for video _KBO_nUmAv4:
+'list' object has no attribute 'reshape'

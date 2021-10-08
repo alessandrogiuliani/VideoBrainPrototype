@@ -18,6 +18,9 @@ from urllib.error import HTTPError
 from gensim.models import Word2Vec,KeyedVectors
 from gensim.models.wrappers import FastText
 from nltk.corpus import abc
+from waitress import serve
+from flask_cors import CORS
+import requests
 
 #*****************************************************************************
 #***********************   Parameters settings    ****************************
@@ -35,7 +38,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
-opener = startOpener()
+
 #opener.open('https://www.youtube.com')
 
 debug = False #Assing True only for testing. It loads a very small model to use less resources
@@ -95,12 +98,15 @@ def status():
 
 @app.route(f'/api')
 def process_video():
+    global opener
+    opener = startOpener()
     global busy
     if busy:
         return 'System is busy...try again later...'
     busy = True
     videoid =request.args.get('id', default='', type = str)
-    videoURL = 'https://www.youtube.com/watch?v=' + videoid
+    videoURL = 'http://www.youtube.com/watch?v=' + videoid
+    #opener.open(videoURL)
     resString = ''
     try:
         vdomain = request.args.get('domain', default=domain, type = str)
@@ -156,10 +162,11 @@ def process_video():
                                 'get_title': title,
                                 'get_description': description,
                                 'get_original_tags': original_tags,
-                                'rising_trends': rising}
+                                'rising_trends': rising,
+                                'opener': opener}
             tag_handler = TagGenerator(model=models[lang], **tag_parameters)
     
-            stm, st, stt, ch, tt, yt = tag_handler.getTags(videoid, opener=opener)
+            stm, st, stt, ch, tt, yt = tag_handler.getTags(videoid)
             resString += f'''\n\nGenerated tags:\n\n- Channel Name: {ch}\n\n- 
             Tags from title: {tt}\n\n- Tags from textual metadata: {stm}\n\n- 
             Trends from title: {stt}\n\n- Trends from category: {st}\n\n- 
@@ -171,6 +178,8 @@ def process_video():
                 f.write(resString)
         a = jsonify(success=True)
         busy = False
+        #opener.close()
+        print(resString)
         return f'\r\rVideo {videoid} successfully processed.{resString}'
     except Exception as e:
         print(e)
@@ -207,8 +216,8 @@ def handle_500(e):
 ###############  Server starting method ###########################
 
 try:
-    app.run(port = PORT_NUMBER)
-
+    #app.run(host='0.0.0.0', port = PORT_NUMBER)
+    serve(app, host='0.0.0.0', port = PORT_NUMBER)
 
 except KeyboardInterrupt:
       print('^C received, shutting down the web server')
