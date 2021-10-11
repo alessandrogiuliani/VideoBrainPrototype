@@ -178,8 +178,6 @@ def process_video():
                 f.write(resString)
         a = jsonify(success=True)
         busy = False
-        #opener.close()
-        print(resString)
         return f'\r\rVideo {videoid} successfully processed.{resString}'
     except Exception as e:
         print(e)
