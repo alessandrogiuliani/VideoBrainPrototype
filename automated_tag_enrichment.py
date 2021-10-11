@@ -178,29 +178,10 @@ class YouTubeMetaExtractor(object):
         self.url = ytURL
         self.videoID = ytURL.replace('https://www.youtube.com/watch?v=', '') 
         self.storeRelatedVideos = kwargs.get('storeRelatedVideos', True)
-        #self.properties = self.extract_meta_data(ytURL)
-        #self.get_relatedTags(self.get_relatedSearchLinks())
+
         
         
-        
-        
-    def get_metaProperties(self, link):
-        properties = list()
-        if self.opener is not None: self.opener.open(link)
-        webpage = urlopen(link).read()
-        soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
-        if self.get_original_tags:
-            tags = soup.find_all("meta",  property="og:video:tag")
-            properties += [x['content'] for x in tags]
-        if self.get_title:
-            title = soup.find_all("meta",  property="og:title")[0]['content']
-            properties.append(title)           
-        if self.get_description:
-            description = soup.find_all("meta",  property="og:description")[0]['content']
-            properties.append(description)
-        if self.opener is not None: self.opener.close()
-        return properties
-        
+       
 
     def get_channel(self, link):
         if self.opener is not None: self.opener.open(link)
@@ -230,9 +211,24 @@ class YouTubeMetaExtractor(object):
         if self.opener is not None: self.opener.open(link)
         webpage = urlopen(link).read()
         soup = BeautifulSoup(webpage, "lxml")
-        tags = soup.find_all("meta",  property="og:video:tag")
+        try:
+            tags = soup.find_all("meta",  property="og:video:tag")
+        except:
+            if self.opener is not None: self.opener.close()
+            return []
         if self.opener is not None: self.opener.close()
         return [x['content'] for x in tags]
+    
+    
+    def retrieve_description(self, link):
+        if self.opener is not None: self.opener.open(link)
+        webpage = urlopen(link).read()
+        soup = BeautifulSoup(webpage, features="lxml", from_encoding="iso-8859-1")
+        description = soup.find_all("meta",  property="og:description")[0]['content']
+        if self.opener is not None: self.opener.close()
+        return description
+    
+    
 
     def noun_tokenizer(self, string):
         tokenized = nltk.word_tokenize(string)
@@ -247,11 +243,11 @@ class YouTubeMetaExtractor(object):
         video = pafy.new(videoURL)
         res = list()
         if self.get_original_tags:
-            res += video.keywords
+            res += self.get_tags(videoURL)
         if self.get_title:
             res += self.noun_tokenizer(video.title)
         if self.get_description:
-            res += self.noun_tokenizer(re.sub(r'(https)|(http)?:\/\/\S*', '', video.description, flags=re.MULTILINE)) 
+            res += self.noun_tokenizer(re.sub(r'(https)|(http)?:\/\/\S*', '', self.retrieve_description(videoURL), flags=re.MULTILINE)) 
         if self.opener is not None: self.opener.close()
         return res
 
@@ -400,12 +396,13 @@ class TagGenerator(object):
             domain = [self.domain]
         elif self.language == 'italian': 
             domain = self.mapping_italian[self.domain]
-        print(parsed)
-        suggested_trends = self.selector.select_trends(parsed,
+        try:
+            suggested_trends = self.selector.select_trends(parsed,
                           self.candidate_trends,
                           self.n_trends,
                           self.vectorizer)
-        print(parsed)
+        except AttributeError:
+            suggested_trends = []
         suggested_tags_from_metainfo = self.selector.select_trends(domain,
                           parsed,
                           self.n_trends,

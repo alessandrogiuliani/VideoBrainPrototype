@@ -135,7 +135,7 @@ if args.EMBEDDING or load_embedding_model:
             
 def single_run(itemID):
     resString = ''
-    videoURL = 'https://www.youtube.com/watch?v=' + itemID
+    videoURL = 'https://www.youtube.com/watch?v=' + str(itemID)
     
     if args.gen_thumb:
         thumb_parameters = {'domain': args.domain,
@@ -188,7 +188,7 @@ def single_run(itemID):
 
 def processCSV(csvfile):
         data = pd.read_csv(csvfile)
-        toProcess = [l for l in data['itemCode']]
+        toProcess = [str(l) for l in data['itemCode']]
         length = len(toProcess)
         i = 1
         for v_id in toProcess:

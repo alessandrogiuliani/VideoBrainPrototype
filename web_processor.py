@@ -41,7 +41,7 @@ logging.getLogger('flask_cors').level = logging.DEBUG
 
 #opener.open('https://www.youtube.com')
 
-debug = False #Assing True only for testing. It loads a very small model to use less resources
+debug = True #Assing True only for testing. It loads a very small model to use less resources
 
 if load_embedding_model:
     models = dict()
