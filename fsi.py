@@ -18,7 +18,7 @@ import os
 import cv2
 import time
 import logging.config
-import mypafy as pafy
+import my_pafy as pafy
 import pandas as pd
 from my_scenedetect.video_manager import VideoManager
 from my_scenedetect.scene_manager import SceneManager
