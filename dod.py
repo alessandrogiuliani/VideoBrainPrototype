@@ -19,7 +19,7 @@ import os
 import cv2
 import time
 import logging.config
-import mypafy as pafy
+import my_pafy as pafy
 import numpy as np
 import json
 import pandas as pd
