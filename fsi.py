@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon May 11 16:20:55 2020
-
-@credits: Leonardo Piano
+@credits: Leonardo Piano, Alessandro Giuliani
 @author: Leonardo Piano, Alessandro Giuliani
-
 
 This module contains all functionalities for the Fast Scene Identification
 (FSI) algorithm.
-
 """
 
 import glob

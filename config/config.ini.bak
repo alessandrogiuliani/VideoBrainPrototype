@@ -30,7 +30,7 @@ close_up_ratio = 0.1
 [tags]
 #Tag generator parameters
 n_suggested_tags = 10
-language = english
+language = italian
 granularity = SL
 output_folder_tags = ./experiments/tags
 get_title = True

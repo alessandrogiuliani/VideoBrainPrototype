@@ -166,11 +166,12 @@ def process_video():
                                 'opener': opener}
             tag_handler = TagGenerator(model=models[lang], **tag_parameters)
     
-            stm, st, stt, ch, tt, yt = tag_handler.getTags(videoid)
+            stm, st, stt, ch, tt, yt, ytt = tag_handler.getTags(videoid)
             resString += f'''\n\nGenerated tags:\n\n- Channel Name: {ch}\n\n- 
             Tags from title: {tt}\n\n- Tags from textual metadata: {stm}\n\n- 
             Trends from title: {stt}\n\n- Trends from category: {st}\n\n- 
-            YouTube search bar suggestions: {yt}\n\n'''
+            YouTube search bar suggestions: {yt}\n\n
+            - YouTube search bar suggestions from title: {ytt}\n'''
             local_folder = f'{output_folder_tags}/{videoid}'
             if not os.path.exists(local_folder):
                 os.makedirs(local_folder)

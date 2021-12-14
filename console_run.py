@@ -71,7 +71,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
-opener = startOpener()
+#opener = startOpener()
+opener = None
 #opener.open('https://www.youtube.com')
 
 parser = argparse.ArgumentParser(description='VideoBrain prototype started!')
@@ -167,9 +168,9 @@ if args.gen_tags:
                         'rising_trends': args.rising_trends,
                         'opener': opener}
     tag_handler = TagGenerator(model=models[args.lang], **tag_parameters)
-    suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title, channel_tag, title_tokens, yt_suggestions = tag_handler.getTags(args.id)
+    suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title, channel_tag, title_tokens, yt_suggestions, yt_suggestions_from_title = tag_handler.getTags(args.id)
     resString += f'''\n\nGenerated tags:\n\n- Channel Name: {channel_tag}\n\n- Tags from title: {title_tokens}\n\n- Tags from textual metadata: {suggested_tags_from_metainfo}\n\n- Tags from trends:
-{suggested_trends_from_title}\n\n- YouTube search bar suggestions: {yt_suggestions}\n\n'''
+{suggested_trends_from_title}\n\n- YouTube search bar suggestions: {yt_suggestions}\n\n- YouTube search bar suggestions from title: {yt_suggestions_from_title}\n\n'''
     local_folder = f'{output_folder_tags}/{args.id}'
     if not os.path.exists(local_folder):
         os.makedirs(local_folder)

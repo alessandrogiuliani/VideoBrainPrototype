@@ -1,0 +1,17 @@
+
+
+Generated tags:
+
+- Channel Name: MUSIC PLAY
+
+- Tags from title: ['album', 'ville', 'full', 'violin', 'hits', 'caitlin', 'top', 'greatest', 'cover']
+
+- Tags from textual metadata: ['cover', 'full', 'hits', 'greatest', 'top']
+
+- Tags from trends:
+['fleetwood mac greatest hits full album', 'peppa pig full episodes', 'cover version', 'love on top', 'their greatest hits (1971–1975)', 'greatest hits album', 'motown greatest hits', "motown's greatest hits", "simon and garfunkel's greatest hits", "elton john's greatest hits"]
+
+- YouTube search bar suggestions: ['music playlist', 'music playlist 2021', 'music play', 'music player', 'music player android', 'music play barry white', 'music playlist drum koon', 'music playlist 2020', 'music playing lol', 'music play 3d win']
+
+- YouTube search bar suggestions from title: ['greatest hits full album', 'hits full movie hindi', 'hits full movies', 'hits full movie 2021', 'hits full songs', 'greatest hits rock 70 80 90', 'full album iron maiden', 'cover full house', 'top violin performance', 'hits full screen status']
+

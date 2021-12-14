@@ -9,7 +9,10 @@ import tensorflow as tf
 from keras import backend as K
 from keras.layers import Conv2D, Add, ZeroPadding2D, UpSampling2D, Concatenate, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
-from keras.layers.normalization import BatchNormalization
+try:
+    from keras.layers.normalization import BatchNormalization
+except ImportError:
+    from tensorflow.keras.layers import BatchNormalization
 from keras.models import Model
 from keras.regularizers import l2
 

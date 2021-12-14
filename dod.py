@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon May 11 16:20:55 2020
-
-@author: Alessandro Giuliani, Leonardo Piano
-
+@credits: Leonardo Piano, Alessandro Giuliani
+@author: Leonardo Piano, Alessandro Giuliani
 
 This module contains all functionalities for the Dynamic Object Detection (DOD) algorithm.
-
 """
 
 from yolo import YOLO

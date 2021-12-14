@@ -2,7 +2,7 @@
 """
 Created on Wed Sep 30 13:42:30 2020
 
-@author: Alessandro Giuliani, Maria Madalina Stanciu
+@author: Alessandro Giuliani
 
 """
 from pandas.io.json import json_normalize
@@ -18,6 +18,7 @@ import numpy as np
 # from tagger import Tagger
 from gensim.models import Word2Vec,KeyedVectors
 import nltk
+from nltk.collocations import *
 import re
 from nltk.corpus import stopwords
 from gensim.models import Word2Vec,KeyedVectors
@@ -25,6 +26,7 @@ from gensim.models.wrappers import FastText
 from nltk.corpus import abc
 from nltk.cluster import KMeansClusterer
 from urllib.request import urlopen
+from urllib import parse
 from bs4 import BeautifulSoup
 import warnings
 from google_trends_wrapper import utils
@@ -168,7 +170,8 @@ class YouTubeMetaExtractor(object):
         self.get_description = kwargs.get('get_description', True)
         self.get_original_tags = kwargs.get('get_original_tags', True)
         self.load_settings(ytURL, **kwargs)
-        
+        self.bigram_measures = nltk.collocations.BigramAssocMeasures()
+        self.trigram_measures = nltk.collocations.TrigramAssocMeasures()
         
         
     
@@ -236,6 +239,16 @@ class YouTubeMetaExtractor(object):
         nouns = [word.lower() for (word, pos) in nltk.pos_tag(tokenized) if is_noun(pos) and word.isalpha() and len(word)>2]
         return list(set(nouns))
         
+    
+    def extract_ngrams(self, string):        
+        tokens = [word.lower() for word in nltk.word_tokenize(string) if word.isalnum()]
+        finder = BigramCollocationFinder.from_words(tokens)
+        tuples = finder.nbest(self.bigram_measures.pmi, finder.N)
+        finder2 = TrigramCollocationFinder.from_words(tokens)
+        tuples += finder2.nbest(self.trigram_measures.pmi, finder.N)
+        return [' '.join(x) for x in tuples]
+
+
         
     ############ YT Video Metadata Extractor ##############
     def extract_meta_data(self, videoURL):
@@ -352,7 +365,7 @@ class TagGenerator(object):
         results = list()
         for token in title_tokens:
             results += self.catIds.get_trends_by_keyword(token, top=self.top, rising = self.rising)
-        self.title_trends = set(results)
+        self.title_trends = list(set(results))
 
         
         
@@ -364,13 +377,22 @@ class TagGenerator(object):
     
     
     def get_YT_suggestions(self, query):
-        query_formatted = query.replace(' ', '%20')
-        url = f'http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q={query_formatted}%20'
+        query_formatted = parse.quote_plus(query)
+        url = f'http://suggestqueries.google.com/complete/search?client=chrome&ds=yt&q={query_formatted}'
         if self.opener is not None: self.opener.open(url)
         response = urlopen(url)
-        data_json = json.loads(response.read())
+        data_json = json.loads(response.read().decode("utf-8","ignore"))
         if self.opener is not None: self.opener.close()
         return data_json[1]
+    
+    
+    
+    def get_YT_suggestions_from_list(self, queryList):
+        res = list()
+        for q in queryList:
+            res += self.get_YT_suggestions(q)
+        return list(set(res))
+
 
 
     def getTags(self, videoId):
@@ -390,6 +412,9 @@ class TagGenerator(object):
         self.getTitleTrends(title_tokens)
         channel_name = yt_handler.get_channel(videoURL)
         yt_suggestions = self.get_YT_suggestions(channel_name)[:self.n_trends]
+        title_bigrams = yt_handler.extract_ngrams(yt_handler.video_title)
+        title_tokens += title_bigrams
+        title_yt_suggestions = self.get_YT_suggestions_from_list(title_bigrams)
         if len(parsed) == 0:
             return []
         if self.language == 'english': 
@@ -402,7 +427,11 @@ class TagGenerator(object):
                           self.n_trends,
                           self.vectorizer)
         except AttributeError:
-            suggested_trends = []
+            suggested_trends = list()
+        selected_title_tokens = self.selector.select_trends(parsed,
+                          title_tokens,
+                          self.n_trends,
+                          self.vectorizer)
         suggested_tags_from_metainfo = self.selector.select_trends(domain,
                           parsed,
                           self.n_trends,
@@ -411,6 +440,13 @@ class TagGenerator(object):
                           self.title_trends,
                           self.n_trends,
                           self.vectorizer)
-        return suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title, channel_name, title_tokens, yt_suggestions
+        try:
+            yt_suggestions_from_title = self.selector.select_trends(parsed,
+                          title_yt_suggestions,
+                          self.n_trends,
+                          self.vectorizer)
+        except AttributeError:
+            yt_suggestions_from_title = list()
+        return suggested_tags_from_metainfo, suggested_trends, suggested_trends_from_title, channel_name, selected_title_tokens, yt_suggestions, yt_suggestions_from_title
 
 

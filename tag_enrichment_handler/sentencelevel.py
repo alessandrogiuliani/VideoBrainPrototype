@@ -35,7 +35,7 @@ def select_trends(tags, trends, num_trends, sentence_vectorizer):
     final_df = None
     for sentence in sentences:
         sentence_emb = sentence_vectorizer.sent2vec(sentence)
-        if len(sentence_emb) == 0:
+        if (len(sentence_emb) == 0) or (len(keywords_emb) == 0):
             continue
         similarity = sentence_vectorizer.get_cosine_similarity(keywords_emb, sentence_emb)
         cosine_distance = cosine(keywords_emb, sentence_emb)
