@@ -17,14 +17,14 @@ import logging.config
 import my_pafy as pafy
 import pandas as pd
 from my_scenedetect.video_manager import VideoManager
-from my_scenedetect.scene_manager import SceneManager
-from my_scenedetect.stats_manager import StatsManager
-from my_scenedetect.detectors import ContentDetector
+from scenedetect.scene_manager import SceneManager
+from scenedetect.stats_manager import StatsManager
+from scenedetect.detectors import ContentDetector
 import shutil
 from yolo import YOLO
 from PIL import Image
 from six.moves.urllib.parse import urlparse
-from my_scenedetect.frame_timecode import FrameTimecode
+from scenedetect.frame_timecode import FrameTimecode
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -156,7 +156,8 @@ class FSI(object):
         if video is None: return
         video_manager = VideoManager([video])
         if self.max_length > 0:
-            video_manager.set_duration(duration = FrameTimecode(timecode=float(self.max_length), 
+            video_manager.set_duration(start_time = video_manager.get_base_timecode(),
+                                       duration = FrameTimecode(timecode=float(self.max_length), 
                                                                 fps = video_manager.get_framerate()))
         scene_manager = SceneManager(StatsManager())
         scene_manager.add_detector(ContentDetector(self.fsi_threshold, min_scene_len=15))
@@ -262,7 +263,9 @@ class FSI(object):
         if self.log: print("v_id "+str(v_id))
         if self.is_url(video):
             if self.log: print("before pafy")
+            if self.opener is not None: self.opener.open(video)
             videoPafy = pafy.new(video)
+            if self.opener is not None: self.opener.close()
             if self.log: print("after pafy")
             video = self.getBestVideo(videoPafy)
         else:
@@ -271,9 +274,11 @@ class FSI(object):
         try:
             framesList = self.differentsFrames(video)
         except:
+            if self.opener is not None: self.opener.open(video_url)
             videoPafy = pafy.new(video_url)
             video = self.getNormalVideo(videoPafy)[0]
             framesList = self.differentsFrames(video)
+            if self.opener is not None: self.opener.close()
         print("Detected Frames : ", len(framesList))
         cam = cv2.VideoCapture(video)
         if not cam.isOpened():

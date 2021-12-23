@@ -24,7 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-""" PySceneDetect my_scenedetect.cli.context Module
+""" ``scenedetect.cli.context`` Module
 
 This file contains the implementation of the PySceneDetect command-line
 interface (CLI) context class CliContext, used for the main application
@@ -43,36 +43,36 @@ import numpy as np
 # Third-Party Library Imports
 import click
 import cv2
-from my_scenedetect.platform import tqdm
-from my_scenedetect.platform import get_and_create_path
+from scenedetect.platform import tqdm
+from scenedetect.platform import get_and_create_path
 
 # PySceneDetect Library Imports
-import my_scenedetect.detectors
+import scenedetect.detectors
 
-from my_scenedetect.scene_manager import SceneManager
-from my_scenedetect.scene_manager import write_scene_list
-from my_scenedetect.scene_manager import write_scene_list_html
+from scenedetect.scene_manager import SceneManager
+from scenedetect.scene_manager import write_scene_list
+from scenedetect.scene_manager import write_scene_list_html
 
-from my_scenedetect.stats_manager import StatsManager
-from my_scenedetect.stats_manager import StatsFileCorrupt
-from my_scenedetect.stats_manager import StatsFileFramerateMismatch
+from scenedetect.stats_manager import StatsManager
+from scenedetect.stats_manager import StatsFileCorrupt
+from scenedetect.stats_manager import StatsFileFramerateMismatch
 
-from my_scenedetect.video_manager import VideoManager
-from my_scenedetect.video_manager import VideoOpenFailure
-from my_scenedetect.video_manager import VideoFramerateUnavailable
-from my_scenedetect.video_manager import VideoParameterMismatch
-from my_scenedetect.video_manager import InvalidDownscaleFactor
+from scenedetect.video_manager import VideoManager
+from scenedetect.video_manager import VideoOpenFailure
+from scenedetect.video_manager import VideoFramerateUnavailable
+from scenedetect.video_manager import VideoParameterMismatch
+from scenedetect.video_manager import InvalidDownscaleFactor
 
-from my_scenedetect.video_splitter import is_mkvmerge_available
-from my_scenedetect.video_splitter import is_ffmpeg_available
-from my_scenedetect.video_splitter import split_video_mkvmerge
-from my_scenedetect.video_splitter import split_video_ffmpeg
+from scenedetect.video_splitter import is_mkvmerge_available
+from scenedetect.video_splitter import is_ffmpeg_available
+from scenedetect.video_splitter import split_video_mkvmerge
+from scenedetect.video_splitter import split_video_ffmpeg
 
-from my_scenedetect.platform import get_cv2_imwrite_params
-from my_scenedetect.platform import check_opencv_ffmpeg_dll
+from scenedetect.platform import get_cv2_imwrite_params
+from scenedetect.platform import check_opencv_ffmpeg_dll
 
 
-from my_scenedetect.frame_timecode import FrameTimecode
+from scenedetect.frame_timecode import FrameTimecode
 
 def get_plural(val_list):
     """ Get Plural: Helper function to return 's' if a list has more than one (1)
@@ -216,8 +216,8 @@ class CliContext(object):
             for i, r in enumerate([
                 # pad ranges to number of images
                 r
-                if r.stop-r.start >= self.num_images
-                else list(r) + [r.stop-1] * (self.num_images - len(r))
+                if 1+r[-1]-r[0] >= self.num_images
+                else list(r) + [r[-1]] * (self.num_images - len(r))
                 # create range of frames in scene
                 for r in (
                     range(start.get_frames(), end.get_frames())
@@ -310,7 +310,7 @@ class CliContext(object):
         if self.scene_manager.get_num_detectors() == 0:
             logging.error(
                 'No scene detectors specified (detect-content, detect-threshold, etc...),\n'
-                '  or failed to process all command line arguments.')
+                ' or failed to process all command line arguments.')
             return
 
         # Handle scene detection commands (detect-content, detect-threshold, etc...).
@@ -323,6 +323,19 @@ class CliContext(object):
         num_frames = self.scene_manager.detect_scenes(
             frame_source=self.video_manager, frame_skip=self.frame_skip,
             show_progress=not self.quiet_mode)
+
+        # Handle case where video fails with multiple audio tracks (#179).
+        # TODO: Is there a fix for this? See #179.
+        if num_frames <= 0:
+            logging.critical('\n'.join([
+                'Failed to read any frames from video file. This could be caused'
+                ' by the video having multiple audio tracks. If so, please try'
+                ' removing the audio tracks or muxing to mkv via:'
+                '      ffmpeg -i input.mp4 -c copy -an output.mp4'
+                'or:'
+                '      mkvmerge -o output.mkv input.mp4'
+                ' For details, see https://pyscenedetect.readthedocs.io/en/latest/faq/']))
+            return
 
         duration = time.time() - start_time
         logging.info('Processed %d frames in %.1f seconds (average %.2f FPS).',
@@ -487,7 +500,7 @@ class CliContext(object):
         self.options_processed = False
         try:
             self.scene_manager.add_detector(detector)
-        except my_scenedetect.stats_manager.FrameMetricRegistered:
+        except scenedetect.stats_manager.FrameMetricRegistered:
             raise click.BadParameter(message='Cannot specify detection algorithm twice.',
                                      param_hint=detector.cli_name)
         self.options_processed = options_processed_orig

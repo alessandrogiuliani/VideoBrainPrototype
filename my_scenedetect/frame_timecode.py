@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-""" ``scenedetect.frame_timecode``
+""" ``scenedetect.frame_timecode`` Module
 
 This module contains the :py:class:`FrameTimecode` object, which is used as a way for
 PySceneDetect to store frame-accurate timestamps of each cut. This is done by also
@@ -38,7 +38,7 @@ Unit tests for the FrameTimecode object can be found in `tests/test_timecode.py`
 import math
 
 # PySceneDetect Library Imports
-from my_scenedetect.platform import STRING_TYPE
+from scenedetect.platform import STRING_TYPE
 
 
 MINIMUM_FRAMES_PER_SECOND_FLOAT = 1.0 / 1000.0

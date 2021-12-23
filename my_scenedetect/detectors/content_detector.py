@@ -24,7 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-""" Module: ``scenedetect.detectors.content_detector``
+""" ``scenedetect.detectors.content_detector`` Module
 
 This module implements the :py:class:`ContentDetector`, which compares the
 difference in content between adjacent frames against a set threshold/score,
@@ -39,7 +39,7 @@ import numpy
 import cv2
 
 # PySceneDetect Library Imports
-from my_scenedetect.scene_detector import SceneDetector
+from scenedetect.scene_detector import SceneDetector
 
 
 class ContentDetector(SceneDetector):

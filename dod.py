@@ -214,8 +214,10 @@ class DOD(object):
         if self.log: print(f'Downloading video: {video_url}')
         v_id = self.getVideoId(video_url)    
         if self.is_url(video_url):
+            if self.opener is not None: self.opener.open(video_url)
             videoPafy = pafy.new(video_url)  
             self.bestVideo = self.getBestVideo(videoPafy)
+            if self.opener is not None: self.opener.close()
         cam = cv2.VideoCapture(self.bestVideo)
         if not cam.isOpened():
             raise IOError('Can\'t open Yolo2Model')

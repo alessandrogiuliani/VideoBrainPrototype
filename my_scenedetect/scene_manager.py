@@ -28,11 +28,11 @@
 
 This module implements the :py:class:`SceneManager` object, which is used to coordinate
 SceneDetectors and frame sources (:py:class:`VideoManager <scenedetect.video_manager.VideoManager>`
-or ``cv2.VideoCapture``).  This includes creating a cut list (see
-:py:meth:`SceneManager.get_cut_list`) and event list (see :py:meth:`SceneManager.get_event_list`)
-of all changes in scene, which is used to generate a final list of scenes (see
-:py:meth:`SceneManager.get_scene_list`) in the form of a list of start/end
-:py:class:`FrameTimecode <scenedetect.frame_timecode.FrameTimecode>` objects at each scene boundary.
+or ``cv2.VideoCapture``).  This includes creating a cut list (see :py:meth:`SceneManager.get_cut_list`)
+and event list (see :py:meth:`SceneManager.get_event_list`) of all changes in scene,
+which is used to generate a final list of scenes (see :py:meth:`SceneManager.get_scene_list`)
+in the form of a list of start/end :py:class:`FrameTimecode <scenedetect.frame_timecode.FrameTimecode>`
+objects at each scene boundaries.
 
 The :py:class:`FrameTimecode <scenedetect.frame_timecode.FrameTimecode>` objects and `tuples`
 thereof returned by :py:meth:`get_cut_list <SceneManager.get_cut_list>` and
@@ -51,21 +51,21 @@ threshold values (or other algorithm options) are used.
 from __future__ import print_function
 from string import Template
 import math
-
+import numpy as np
 # Third-Party Library Imports
 import cv2
-from my_scenedetect.platform import tqdm
-from my_scenedetect.platform import get_and_create_path
+from scenedetect.platform import tqdm
+from scenedetect.platform import get_and_create_path
 
 # PySceneDetect Library Imports
-from my_scenedetect.frame_timecode import FrameTimecode
-from my_scenedetect.platform import get_csv_writer
-from my_scenedetect.platform import get_cv2_imwrite_params
-from my_scenedetect.stats_manager import FrameMetricRegistered
-from my_scenedetect.scene_detector import SparseSceneDetector
+from scenedetect.frame_timecode import FrameTimecode
+from scenedetect.platform import get_csv_writer
+from scenedetect.platform import get_cv2_imwrite_params
+from scenedetect.stats_manager import FrameMetricRegistered
+from scenedetect.scene_detector import SparseSceneDetector
 
-from my_scenedetect.thirdparty.simpletable import SimpleTableCell, SimpleTableImage
-from my_scenedetect.thirdparty.simpletable import SimpleTableRow, SimpleTable, HTMLPage
+from scenedetect.thirdparty.simpletable import SimpleTableCell, SimpleTableImage
+from scenedetect.thirdparty.simpletable import SimpleTableRow, SimpleTable, HTMLPage
 
 
 
@@ -115,7 +115,6 @@ def get_scenes_from_cuts(cut_list, base_timecode, num_frames, start_frame=0):
 
 
 def write_scene_list(output_csv_file, scene_list, cut_list=None):
-    # type: (File, List[Tuple[FrameTimecode, FrameTimecode]], Optional[List[FrameTimecode]]) -> None
     """ Writes the given list of scenes to an output file handle in CSV format.
 
     Arguments:
@@ -125,6 +124,7 @@ def write_scene_list(output_csv_file, scene_list, cut_list=None):
             in the video that need to be split to generate individual scenes). If not passed,
             the start times of each scene (besides the 0th scene) is used instead.
     """
+    # type: (File, List[Tuple[FrameTimecode, FrameTimecode]], Optional[List[FrameTimecode]]) -> None
     csv_writer = get_csv_writer(output_csv_file)
     # Output Timecode List
     csv_writer.writerow(
@@ -347,7 +347,11 @@ def generate_images(scene_list, video_manager, video_name, num_images=2,
 
     return completed
 
+def estimate_blur(image): 
+    gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY) 
+    fm= cv2.Laplacian(image,cv2.CV_64F).var()
 
+    return fm
 ##
 ## SceneManager Class Implementation
 ##
@@ -366,12 +370,15 @@ class SceneManager(object):
     def __init__(self, stats_manager=None):
         # type: (Optional[StatsManager])
         self._cutting_list = []
+        self.sharpest_frames =[]
         self._event_list = []
         self._detector_list = []
         self._sparse_detector_list = []
         self._stats_manager = stats_manager
         self._num_frames = 0
         self._start_frame = 0
+
+  
 
 
     def add_detector(self, detector):
@@ -491,13 +498,18 @@ class SceneManager(object):
                 for start, end in self._event_list]
 
 
-    def _process_frame(self, frame_num, frame_im):
+    def _process_frame(self, frame_num, frame_im,):
         # type(int, numpy.ndarray) -> None
         """ Adds any cuts detected with the current frame to the cutting list. """
         for detector in self._detector_list:
             self._cutting_list += detector.process_frame(frame_num, frame_im)
         for detector in self._sparse_detector_list:
             self._event_list += detector.process_frame(frame_num, frame_im)
+
+      
+
+
+
 
 
     def _is_processing_required(self, frame_num):
@@ -546,7 +558,7 @@ class SceneManager(object):
             ValueError: `frame_skip` **must** be 0 (the default) if the SceneManager
                 was constructed with a StatsManager object.
         """
-
+        best=[]
         if frame_skip > 0 and self._stats_manager is not None:
             raise ValueError('frame_skip must be 0 when using a StatsManager.')
 
@@ -593,13 +605,14 @@ class SceneManager(object):
                 # *always* required for *all* frames when frame_skip > 0.
                 if (self._is_processing_required(self._num_frames + start_frame)
                         or self._is_processing_required(self._num_frames + start_frame + 1)):
-                    ret_val, frame_im = frame_source.read()
+                    ret_val, frame_im, _ = frame_source.read()
                 else:
                     ret_val = frame_source.grab()
                     frame_im = None
 
                 if not ret_val:
                     break
+                                 
                 self._process_frame(self._num_frames + start_frame, frame_im)
 
                 curr_frame += 1
@@ -625,4 +638,111 @@ class SceneManager(object):
             if progress_bar:
                 progress_bar.close()
 
+        
+
+
         return num_frames
+
+    def detect_sharpest(self, frame_source,frameslist,workdir, end_time=None, frame_skip=0,
+                        show_progress=True):
+            
+            bestFrames=[]
+            if frame_skip > 0 and self._stats_manager is not None:
+                raise ValueError('frame_skip must be 0 when using a StatsManager.')
+
+            start_frame = 0
+            curr_frame = 0
+            end_frame = None
+
+            total_frames = math.trunc(frame_source.get(cv2.CAP_PROP_FRAME_COUNT))
+
+            start_time = frame_source.get(cv2.CAP_PROP_POS_FRAMES)
+            if isinstance(start_time, FrameTimecode):
+                start_frame = start_time.get_frames()
+            elif start_time is not None:
+                start_frame = int(start_time)
+            self._start_frame = start_frame
+
+            curr_frame = start_frame
+
+            if isinstance(end_time, FrameTimecode):
+                end_frame = end_time.get_frames()
+            elif end_time is not None:
+                end_frame = int(end_time)
+
+            if end_frame is not None:
+                total_frames = end_frame
+
+            if start_frame is not None and not isinstance(start_time, FrameTimecode):
+                total_frames -= start_frame
+
+            if total_frames < 0:
+                total_frames = 0
+
+            progress_bar = None
+            if tqdm and show_progress:
+                progress_bar = tqdm(
+                    total=total_frames, unit='frames')
+            try:
+                
+                for f in frameslist:       
+                  
+                  
+                    ret_val, frame_im,original_frame = frame_source.read()
+                   
+
+                    if not ret_val:
+                        break
+                
+                    max=estimate_blur(frame_im)
+                    best=original_frame
+                    best_num=curr_frame
+                    curr_frame+=1
+                        
+                    while curr_frame<=f[1]:
+                      
+                        ret_val, frame_im,original_frame = frame_source.read()
+                       
+
+                        if not ret_val:
+                            break
+                                        
+                        
+
+                        curr_frame += 1
+                        self._num_frames += 1
+                        if progress_bar:
+                            progress_bar.update(1)
+
+                    
+                       
+                    
+                        sh=estimate_blur(frame_im)
+                        if(sh>max):
+                            max=sh
+                            best=original_frame
+                            best_num=curr_frame
+
+                    #save to workdir
+                    if(int(np.mean(best)) >0  and int(np.mean(best))!=255):                                
+                        cv2.imwrite(workdir+'/frame_num_'+str(best_num)+'.jpg',best)
+                    #bestFrames.append(best_num)
+                   
+                
+                    
+
+            
+
+                num_frames = curr_frame - start_frame
+
+            finally:
+
+                if progress_bar:
+                    progress_bar.close()
+            
+           # return bestFrames
+
+            
+
+
+

@@ -321,10 +321,12 @@ class GenericThumbnailProcessor(object):
         if self.log: print("v_id "+str(v_id))
         if self.is_url(video):
             if self.log: print("before pafy")
+            if self.opener is not None: self.opener.open(video)
             videoPafy = pafy.new(video)
             #video = videoPafy.getbest(preftype="mp4").url
             if self.log: print("after pafy")
             video = self.getBestVideo(videoPafy)
+            if self.opener is not None: self.opener.close()
         else:
             v_id = v
         cam = cv2.VideoCapture(video)
@@ -363,9 +365,11 @@ class GenericThumbnailProcessor(object):
         v_id = self.getVideoId(video)
         if self.log: print("extractFrames video: "+video)
         if self.is_url(video):
+            if self.opener is not None: self.opener.open(video)
             videoPafy = pafy.new(video)
             #video = videoPafy.getbest(preftype="mp4").url
             video = self.getBestVideo(videoPafy)
+            if self.opener is not None: self.opener.close()
         else:
             v_id = v    
         workdir = self.createWorkDir(v_id, outputFolder)

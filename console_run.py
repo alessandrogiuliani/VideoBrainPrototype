@@ -24,7 +24,7 @@ import os
 #from oauth2client import client # Added
 #from oauth2client import tools # Added
 #from oauth2client.file import Storage # Added
-import pafy
+import my_pafy as pafy
 from urllib.request import Request
 
 ############ Sessions and authentication ###############
@@ -72,7 +72,8 @@ logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
 #opener = startOpener()
-opener = None
+global opener
+opener = startOpener()
 #opener.open('https://www.youtube.com')
 
 parser = argparse.ArgumentParser(description='VideoBrain prototype started!')

@@ -25,7 +25,7 @@
 #
 
 
-""" PySceneDetect `scenedetect.detectors` Module
+""" ``scenedetect.detectors`` Module
 
 This module contains implementations of scene detection algorithms by inhereting
 from the base SceneDetector class (in scenedetect.scene_detector) and implementing
@@ -37,8 +37,8 @@ modules (i.e. from scenedetect.detectors import ContentDetector).
 """
 
 # PySceneDetect Detection Algorithm Imports
-from my_scenedetect.detectors.content_detector import ContentDetector
-from my_scenedetect.detectors.threshold_detector import ThresholdDetector
+from scenedetect.detectors.content_detector import ContentDetector
+from scenedetect.detectors.threshold_detector import ThresholdDetector
 
 # Algorithms being ported:
 #from scenedetect.detectors.motion_detector import MotionDetector

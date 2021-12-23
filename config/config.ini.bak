@@ -2,7 +2,7 @@
 #Framework parameters
 PORT_NUMBER = 8080
 STATIC_URL_PATH = /static_files
-LOG = False
+LOG = True
 load_embedding_model = True
 luminati_username = lum-customer-c_fb7e1152-zone-static-route_err-pass_dyn
 luminati_password = 5abk7h9ihbd5
@@ -10,7 +10,7 @@ luminati_password = 5abk7h9ihbd5
 [main]
 #Main parameters
 domain = news
-generate_thumbnails = False
+generate_thumbnails = True
 generate_tags = True
 
 
@@ -30,7 +30,7 @@ close_up_ratio = 0.1
 [tags]
 #Tag generator parameters
 n_suggested_tags = 10
-language = italian
+language = english
 granularity = SL
 output_folder_tags = ./experiments/tags
 get_title = True

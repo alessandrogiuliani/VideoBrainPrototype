@@ -25,7 +25,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 
-""" Module: ``scenedetect.stats_manager``
+""" ``scenedetect.stats_manager`` Module
 
 This module contains the :py:class:`StatsManager` class, which provides a key-value store
 for each :py:class:`SceneDetector <scenedetect.scene_detector.SceneDetector>` to read/write
@@ -50,9 +50,9 @@ from __future__ import print_function
 import logging
 
 # PySceneDetect Library Imports
-from my_scenedetect.frame_timecode import MINIMUM_FRAMES_PER_SECOND_FLOAT
-from my_scenedetect.platform import get_csv_reader
-from my_scenedetect.platform import get_csv_writer
+from scenedetect.frame_timecode import MINIMUM_FRAMES_PER_SECOND_FLOAT
+from scenedetect.platform import get_csv_reader
+from scenedetect.platform import get_csv_writer
 
 # pylint: disable=useless-super-delegation
 

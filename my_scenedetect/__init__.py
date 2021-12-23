@@ -24,7 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-""" Module: ``scenedetect``
+""" ``scenedetect`` Module
 
 This is the main PySceneDetect module, containing imports of all classes
 so they can be directly accessed from the scenedetect module in addition
@@ -36,31 +36,23 @@ This file also contains the PySceneDetect version string (displayed when calling
 (when calling 'scenedetect about').
 """
 
-# Standard Library Imports
-
-from __future__ import print_function
-import sys
-import os
-import time
-
-
-# PySceneDetect Library Imports
-
 # Commonly used classes for easier use directly from the scenedetect namespace (e.g.
 # scenedetect.SceneManager instead of scenedetect.scene_manager.SceneManager).
-
-from my_scenedetect.scene_manager import SceneManager
-from my_scenedetect.frame_timecode import FrameTimecode
+from scenedetect.scene_manager import SceneManager
+from scenedetect.frame_timecode import FrameTimecode
 from my_scenedetect.video_manager import VideoManager
-from my_scenedetect.stats_manager import StatsManager
-from my_scenedetect.detectors import ThresholdDetector, ContentDetector
-from my_scenedetect.__main__ import main
+from scenedetect.stats_manager import StatsManager
+from scenedetect.__main__ import main
 
 
-# Used for module identification and when printing version & about info.
-# (scenedetect version and scenedetect about)
+# We also bring the detectors into the main scenedetect package namespace
+# for convenience as well. Examples still reference the full package.
+from scenedetect.detectors import ThresholdDetector, ContentDetector
 
-__version__ = 'v0.5.3'
+
+# Used for module identification and when printing version & about info
+# (e.g. calling `scenedetect version` or `scenedetect about`).
+__version__ = 'v0.5.4'
 
 # About & copyright message string shown for the 'about' CLI command (scenedetect about).
 
