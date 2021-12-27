@@ -32,6 +32,7 @@ parser.read(cfg)
 
 #Framework parameters
 PORT_NUMBER = int(parser['framework']['PORT_NUMBER'])
+API_KEY = parser['framework']['API_KEY']
 STATIC_URL_PATH = parser['framework']['STATIC_URL_PATH']
 LOG = str2bool(parser['framework']['LOG'])
 load_embedding_model = str2bool(parser['framework']['load_embedding_model'])
@@ -68,7 +69,7 @@ rising_trends = str2bool(parser['tags']['rising_trends'])
 top_trends = str2bool(parser['tags']['top_trends'])
 
 
-
+proxy = f'http://{luminati_username}:{luminati_password}@zproxy.lum-superproxy.io:22225'
 
 def startOpener()  :
     if sys.version_info[0]==2:
@@ -76,14 +77,14 @@ def startOpener()  :
         from six.moves.urllib import request
         opener = request.build_opener(
             request.ProxyHandler(
-                {'http': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225',
-                'https': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225'}))
+                {f'http': proxy,
+                f'https': proxy}))
     if sys.version_info[0]==3:
         import urllib.request
         opener = urllib.request.build_opener(
             urllib.request.ProxyHandler(
-                {'http': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225',
-                'https': 'http://lum-customer-c_fb7e1152-zone-predictor:h9vz4nk4bhgu@zproxy.lum-superproxy.io:22225'}))
+                {'http': proxy,
+                'https': proxy}))
     return opener
 
 

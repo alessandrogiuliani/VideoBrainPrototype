@@ -56,7 +56,7 @@ class BasePafy(object):
     """ Class to represent a YouTube video. """
 
     def __init__(self, video_url, basic=True, gdata=False,
-                 size=False, callback=None, ydl_opts=None):
+                 size=False, callback=None, ydl_opts=None, opener=None):
         """ Set initial values. """
         self.version = __version__
         self.videoid = extract_video_id(video_url)

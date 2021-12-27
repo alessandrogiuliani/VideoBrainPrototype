@@ -2,10 +2,11 @@
 #Framework parameters
 PORT_NUMBER = 8080
 STATIC_URL_PATH = /static_files
-LOG = True
+LOG = False
 load_embedding_model = True
-luminati_username = lum-customer-c_fb7e1152-zone-static-route_err-pass_dyn
-luminati_password = 5abk7h9ihbd5
+luminati_username = lum-customer-c_fb7e1152-zone-predictor
+luminati_password = h9vz4nk4bhgu
+API_KEY = AIzaSyDC3IWQ-Ugkzn_aKsi3NdMFkyUsj6_KKW0
 
 [main]
 #Main parameters

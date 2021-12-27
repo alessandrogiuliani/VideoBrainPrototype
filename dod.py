@@ -99,6 +99,10 @@ class DOD(object):
             if s.mediatype in ('normal', 'video') and \
                     s.extension=='mp4' and \
                     ('av01' not in s._info.get('vcodec')):  
+                vcap = cv2.VideoCapture(s.url)
+                if not vcap.isOpened():                   
+                    continue
+                vcap.release()
                 width = s.dimensions[0]
                 if width <= width_limit:
                     if res is None:

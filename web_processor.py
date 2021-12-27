@@ -37,11 +37,12 @@ app = Flask(__name__, static_url_path= STATIC_URL_PATH)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger('flask_cors').level = logging.DEBUG
+pafy.set_api_key(API_KEY)
 #CORS(app, resources=r'/api/*')
 
 #opener.open('https://www.youtube.com')
 
-debug = True #Assing True only for testing. It loads a very small model to use less resources
+debug = False #Assing True only for testing. It loads a very small model to use less resources
 
 if load_embedding_model:
     models = dict()
@@ -144,7 +145,11 @@ def process_video():
             else:
                 print('ERROR: No valid method has been selected')
                 return 'ERROR: No valid method has been selected'
-            thumb_handler.processVideo(videoURL, f'{output_folder_thumbnails}')
+            try:
+                thumb_handler.processVideo(videoURL, f'{output_folder_thumbnails}')
+            except AttributeError:
+                print('Error: video cannot be processed due to YouTube and openCv incompatible video or url formats')
+                exit(1)
             resString += f'\r\rThumbnails generated and stored at folder: {output_folder_thumbnails}/{videoid}'
         if gen_tags:
             lang = request.args.get('lang', default=language, type = str)

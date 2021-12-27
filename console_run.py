@@ -44,10 +44,15 @@ from urllib.request import Request
 # client_secrets_file = "secret.json"
 # credential_sample_file = 'credential_sample.json'
 # youtube = connect_api(client_secrets_file, credential_sample_file)
-API_KEY = 'AIzaSyDC3IWQ-Ugkzn_aKsi3NdMFkyUsj6_KKW0'
 pafy.set_api_key(API_KEY)
 
 
+proxy = f'http://{luminati_username}:{luminati_password}@zproxy.lum-superproxy.io:22225'
+
+os.environ['http_proxy'] = proxy 
+os.environ['HTTP_PROXY'] = proxy
+os.environ['https_proxy'] = proxy
+os.environ['HTTPS_PROXY'] = proxy
 
 
 
@@ -73,6 +78,7 @@ logging.getLogger('flask_cors').level = logging.DEBUG
 #CORS(app, resources=r'/api/*')
 #opener = startOpener()
 global opener
+#opener = None
 opener = startOpener()
 #opener.open('https://www.youtube.com')
 
@@ -154,7 +160,11 @@ if args.gen_thumb:
     else:
         print('ERROR: No valid method has been selected')
         exit(1)
-    thumb_handler.processVideo(videoURL, f'{args.output_folder_thumbnails}')
+    try:
+        thumb_handler.processVideo(videoURL, f'{args.output_folder_thumbnails}')
+    except AttributeError:
+        print('Error: video cannot be processed due to YouTube and openCv incompatible video or url formats')
+        exit(0)
     resString += f'\r\rThumbnail generated and stored at folder: {args.output_folder_thumbnails}'
 if args.gen_tags:
     tag_parameters  =  {'domain': args.domain,

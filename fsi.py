@@ -25,6 +25,10 @@ from yolo import YOLO
 from PIL import Image
 from six.moves.urllib.parse import urlparse
 from scenedetect.frame_timecode import FrameTimecode
+from socket import fromfd
+from socket import AF_INET
+from socket import SOCK_STREAM
+import requests
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -95,6 +99,10 @@ class FSI(object):
             if s.mediatype in ('normal', 'video') and \
                     s.extension=='mp4' and \
                     ('av01' not in s._info.get('vcodec')):  
+                vcap = cv2.VideoCapture(s.url)
+                if not vcap.isOpened():                   
+                    continue
+                vcap.release()
                 width = s.dimensions[0]
                 if width <= width_limit:
                     if res is None:
@@ -364,9 +372,9 @@ class FSI(object):
     def processVideo(self, videoURL, outputFolder):
         if self.log:
             print("Processing at: "+os.getcwd())
-        self.opener.open(videoURL)
+        if self.opener is not None: self.opener.open(videoURL)
         self.getImgseries(videoURL, outputFolder)
-        self.opener.close()
+        if self.opener is not None: self.opener.close()
         print("-- Extract frame ok")
     
 
