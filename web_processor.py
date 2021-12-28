@@ -21,6 +21,7 @@ from nltk.corpus import abc
 from waitress import serve
 from flask_cors import CORS
 import requests
+import my_pafy as pafy
 
 #*****************************************************************************
 #***********************   Parameters settings    ****************************
