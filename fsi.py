@@ -98,7 +98,7 @@ class FSI(object):
         for s in streams:
             if s.mediatype in ('normal', 'video') and \
                     s.extension=='mp4' and \
-                    ('av01' not in s._info.get('vcodec')):  
+                    ('av01' not in s._info.get('vcodec')):
                 vcap = cv2.VideoCapture(s.url)
                 if not vcap.isOpened():                   
                     continue

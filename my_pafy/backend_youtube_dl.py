@@ -28,7 +28,6 @@ class YtdlPafy(BasePafy):
         ydl_opts = kwargs.get("ydl_opts")
         if ydl_opts:
             self._ydl_opts.update(ydl_opts)
-        self.opener = kwargs.get('opener', None)
         super(YtdlPafy, self).__init__(*args, **kwargs)
 
     def _fetch_basic(self):
@@ -38,7 +37,7 @@ class YtdlPafy(BasePafy):
 
         with youtube_dl.YoutubeDL(self._ydl_opts) as ydl:
             try:
-                self._ydl_info = ydl.extract_info(self.videoid, download=False, opener=self.opener)
+                self._ydl_info = ydl.extract_info(self.videoid, download=False)
             # Turn into an IOError since that is what pafy previously raised
             except youtube_dl.utils.DownloadError as e:
                 raise IOError(str(e).replace('YouTube said', 'Youtube says'))
