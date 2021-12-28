@@ -45,6 +45,15 @@ pafy.set_api_key(API_KEY)
 
 debug = False #Assing True only for testing. It loads a very small model to use less resources
 
+
+proxy = f'http://{luminati_username}:{luminati_password}@zproxy.lum-superproxy.io:22225'
+
+os.environ['http_proxy'] = proxy 
+os.environ['HTTP_PROXY'] = proxy
+os.environ['https_proxy'] = proxy
+os.environ['HTTPS_PROXY'] = proxy
+
+
 if load_embedding_model:
     models = dict()
     if debug:
