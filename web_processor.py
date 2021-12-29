@@ -155,11 +155,7 @@ def process_video():
             else:
                 print('ERROR: No valid method has been selected')
                 return 'ERROR: No valid method has been selected'
-            try:
-                thumb_handler.processVideo(videoURL, f'{output_folder_thumbnails}')
-            except AttributeError:
-                print('Error: video cannot be processed due to YouTube and openCv incompatible video or url formats')
-                exit(1)
+            thumb_handler.processVideo(videoURL, f'{output_folder_thumbnails}')
             resString += f'\r\rThumbnails generated and stored at folder: {output_folder_thumbnails}/{videoid}'
         if gen_tags:
             lang = request.args.get('lang', default=language, type = str)
