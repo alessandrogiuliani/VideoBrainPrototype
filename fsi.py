@@ -29,7 +29,7 @@ from socket import fromfd
 from socket import AF_INET
 from socket import SOCK_STREAM
 import requests
-
+from requests import get 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 yoloInstance = YOLO()

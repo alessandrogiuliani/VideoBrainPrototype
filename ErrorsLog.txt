@@ -66,4 +66,5 @@ Need 11 character video id or the URL of the video. Got https://www.youtube.com/
 ERROR: Video unavailable
 This video is not available2021-12-23 09:48:11 - ERROR for video 5q6XBi3Mons:
 ERROR: Video unavailable
-This video is not available
+This video is not available2021-12-30 11:41:59 - ERROR for video _w2uaGzQ32s:
+Can't open Yolo2Model

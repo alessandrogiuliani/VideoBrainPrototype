@@ -109,6 +109,7 @@ def status():
 
 @app.route(f'/api')
 def process_video():
+
     global opener
     opener = startOpener()
     global busy
