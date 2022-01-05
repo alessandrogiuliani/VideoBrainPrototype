@@ -105,9 +105,9 @@ def status():
 
 @app.route(f'/api')
 def process_video():
-    use_proxy = str2bool(request.args.get('proxy', default=use_proxy, type = str))
+    u_proxy = str2bool(request.args.get('proxy', default=use_proxy, type = str))
     global opener
-    if use_proxy:
+    if u_proxy:
         proxy = f'http://{luminati_username}:{luminati_password}@zproxy.lum-superproxy.io:22225'
         os.environ['http_proxy'] = proxy 
         os.environ['HTTP_PROXY'] = proxy
