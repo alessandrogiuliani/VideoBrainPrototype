@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Sep 30 13:42:30 2020
-
 @author: Alessandro Giuliani
+e-mail: alessandro.giuliani@unica.it
 
 """
 from pandas.io.json import json_normalize

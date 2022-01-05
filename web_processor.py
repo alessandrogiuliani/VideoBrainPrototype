@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 """
-@author: Alessandro Giuliani
+:author: Alessandro Giuliani
+:e-mail: alessandro.giuliani@unica.it
 
 """
 import logging
@@ -46,12 +48,6 @@ pafy.set_api_key(API_KEY)
 debug = False #Assing True only for testing. It loads a very small model to use less resources
 
 
-proxy = f'http://{luminati_username}:{luminati_password}@zproxy.lum-superproxy.io:22225'
-
-os.environ['http_proxy'] = proxy 
-os.environ['HTTP_PROXY'] = proxy
-os.environ['https_proxy'] = proxy
-os.environ['HTTPS_PROXY'] = proxy
 
 
 if load_embedding_model:
@@ -101,7 +97,7 @@ def stop():
 def status():
     global busy
     if busy:
-        return 'System is busy...try again later...'
+        return 'System is processing another video...wait and try again later...'
     return "Server is running and waiting for next video. Put video Id in the url address in the form: hosturl/api/id=<videoid>"
 
 
@@ -109,9 +105,17 @@ def status():
 
 @app.route(f'/api')
 def process_video():
-
+    use_proxy = str2bool(request.args.get('proxy', default=use_proxy, type = str))
     global opener
-    opener = startOpener()
+    if use_proxy:
+        proxy = f'http://{luminati_username}:{luminati_password}@zproxy.lum-superproxy.io:22225'
+        os.environ['http_proxy'] = proxy 
+        os.environ['HTTP_PROXY'] = proxy
+        os.environ['https_proxy'] = proxy
+        os.environ['HTTPS_PROXY'] = proxy
+        opener = startOpener()
+    else:
+        opener = None
     global busy
     if busy:
         return 'System is busy...try again later...'
@@ -176,8 +180,7 @@ def process_video():
                                 'get_original_tags': original_tags,
                                 'rising_trends': rising,
                                 'opener': opener}
-            tag_handler = TagGenerator(model=models[lang], **tag_parameters)
-    
+            tag_handler = TagGenerator(model=models[lang], **tag_parameters)   
             stm, st, stt, ch, tt, yt, ytt = tag_handler.getTags(videoid)
             resString += f'''\n\nGenerated tags:\n\n- Channel Name: {ch}\n\n- 
             Tags from title: {tt}\n\n- Tags from textual metadata: {stm}\n\n- 

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Sep 30 13:42:30 2020
-
 @author: Alessandro Giuliani
+e-mail: alessandro.giuliani@unica.it
 
 """
 import os
@@ -38,6 +37,7 @@ LOG = str2bool(parser['framework']['LOG'])
 load_embedding_model = str2bool(parser['framework']['load_embedding_model'])
 luminati_username = parser['framework']['luminati_username']
 luminati_password = parser['framework']['luminati_password']
+use_proxy = parser['framework']['use_proxy']
 
 
 #Main parameters

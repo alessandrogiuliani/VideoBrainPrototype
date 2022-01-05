@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+@author: Alessandro Giuliani
+e-mail: alessandro.giuliani@unica.it
+
+"""
 import json
 from collections import defaultdict
 
