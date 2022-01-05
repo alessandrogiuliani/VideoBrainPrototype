@@ -37,7 +37,7 @@ LOG = str2bool(parser['framework']['LOG'])
 load_embedding_model = str2bool(parser['framework']['load_embedding_model'])
 luminati_username = parser['framework']['luminati_username']
 luminati_password = parser['framework']['luminati_password']
-use_proxy = parser['framework']['use_proxy']
+use_proxy = str2bool(parser['framework']['use_proxy'])
 
 
 #Main parameters
