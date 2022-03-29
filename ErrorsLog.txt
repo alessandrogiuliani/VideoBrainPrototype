@@ -67,4 +67,26 @@ ERROR: Video unavailable
 This video is not available2021-12-23 09:48:11 - ERROR for video 5q6XBi3Mons:
 ERROR: Video unavailable
 This video is not available2021-12-30 11:41:59 - ERROR for video _w2uaGzQ32s:
-Can't open Yolo2Model
+Can't open Yolo2Model2022-03-26 16:23:25 - ERROR for video 4VMBuAPzhKY:
+name 'models' is not defined2022-03-27 12:22:18 - ERROR for video Trqkz8l_SSg:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 12:29:04 - ERROR for video Trqkz8l_SSg:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 12:29:56 - ERROR for video Trqkz8l_SSg:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 12:31:57 - ERROR for video Trqkz8l_SSg:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 12:55:51 - ERROR for video 7VKh5A0RdPY:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 12:57:06 - ERROR for video gWb8MZOhKG0:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 13:00:02 - ERROR for video yxJP8_Y5LgU:
+ERROR: Video unavailable
+This video is not available2022-03-27 13:00:28 - ERROR for video yxJP8_Y5LgU:
+ERROR: Video unavailable
+This video is not available2022-03-27 13:00:49 - ERROR for video YUQjCYhRGus:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 13:02:46 - ERROR for video -TM1gikvE8M:
+ERROR: Video unavailable
+The uploader has not made this video available in your country2022-03-27 15:51:52 - ERROR for video 9oZ2brdY9tU:
+name 'granularity' is not defined

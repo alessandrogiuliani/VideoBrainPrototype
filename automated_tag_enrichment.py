@@ -256,6 +256,7 @@ class YouTubeMetaExtractor(object):
         res = list()
         if self.get_original_tags:
             res += self.get_tags(videoURL)
+        print(res)
         if self.get_title:
             res += self.noun_tokenizer(video.title)
         if self.get_description:
@@ -323,8 +324,8 @@ class TagGenerator(object):
         if self.domain not in self.mapping_category.keys():
             print('Error: no valid domain selected')
         self.Gcategory = self.mapping_category[self.domain]
-        granularity = kwargs.get('granularity', 'WL')
-        self.selector = self.selectors[granularity]
+        self.granularity = kwargs.get('granularity', 'WL')
+        self.selector = self.selectors[self.granularity]
         self.n_trends = kwargs.get('n_suggested_tags', 5)
         self.google_trends = {}
         self.catIds = utils.CategoryRead(geo=self.languages[self.language])
